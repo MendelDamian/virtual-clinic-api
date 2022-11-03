@@ -1,4 +1,4 @@
-### Projekt Innowacja 2023 API
+### Projekt Innowacja 2022/2023 API
 
 [For beginners](https://htdror.notion.site/HTD-Innowacja-API-3a5831af7f994c84875cacc46066bc00)
 
