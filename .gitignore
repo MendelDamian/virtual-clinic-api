@@ -37,6 +37,3 @@
 
 # Ignore bundled gems
 vendor/bundle
-
-# Jetbrains configuration directory.
-.idea
