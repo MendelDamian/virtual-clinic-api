@@ -37,3 +37,5 @@
 
 # Ignore bundled gems
 vendor/bundle
+
+/config/master.key
