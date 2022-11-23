@@ -8,3 +8,11 @@ class User < ApplicationRecord
     doctor: 2
   }, _prefix: true
 end
+
+class Patient < User
+  default_scope { where(account_type: :patient) }
+end
+
+class Doctor < User
+  default_scope { where(account_type: :doctor) }
+end
