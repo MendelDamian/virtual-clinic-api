@@ -5,6 +5,8 @@ ruby "3.0.4"
 
 gem "devise", "~> 4.8"
 
+gem "devise-jwt", "~> 0.10.0"
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 6.1.7"
 
