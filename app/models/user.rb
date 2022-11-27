@@ -7,6 +7,9 @@ class User < ApplicationRecord
     doctor: 1
   }, _prefix: true
 
+  has_many :user_professions
+  has_many :professions, through: :user_professions
+
   validates_inclusion_of :account_type, in: account_types.keys, message: 'is not a valid account_type'
 
   def account_type=(value)
