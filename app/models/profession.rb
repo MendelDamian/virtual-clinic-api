@@ -1,6 +1,6 @@
 class Profession < ApplicationRecord
   has_many :user_professions
-  has_many :doctors, through: :user_professions
+  has_many :users, through: :user_professions
 
   # Validations
   validates :name, length: { maximum: 50, minimum: 2 }, uniqueness: true
