@@ -3,7 +3,7 @@ class Api::V1::ProceduresController < ApplicationController
 
   # GET /api/v1/procedures
   def index
-    @procedures = Api::V1::Procedure.all
+    @procedures = Procedure.all
 
     render json: @procedures
   end
@@ -15,10 +15,10 @@ class Api::V1::ProceduresController < ApplicationController
 
   # POST /api/v1/procedures
   def create
-    @procedure = Api::V1::Procedure.new(api_v1_procedure_params)
+    @procedure = Procedure.new(api_v1_procedure_params)
 
     if @procedure.save
-      render json: @procedure, status: :created, location: @procedure
+      render json: @procedure, status: :created
     else
       render json: @procedure.errors, status: :unprocessable_entity
     end
@@ -41,7 +41,7 @@ class Api::V1::ProceduresController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_api_v1_procedure
-      @procedure = Api::V1::Procedure.find(params[:id])
+      @procedure = Procedure.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
