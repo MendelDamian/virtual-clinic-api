@@ -4,8 +4,7 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
       if resource.persisted? && resource.account_type_doctor?
         params_professions = params[:user][:professions]
 
-        professions_db = Profession.where(name: params_professions)
-        professions_db.each do |profession|
+        Profession.where(name: params_professions).find_each do |profession|
           profession.user_professions.create!(user_id: resource.id)
         end
       end
@@ -23,11 +22,10 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
         end
 
         # If so, then delete all professions for this doctor.
-        UserProfession.where(user_id: resource.id).destroy_all
+        UserProfession.where(user_id: resource.id).delete_all
 
         # And add the new ones.
-        professions_db = Profession.where(name: params_professions)
-        professions_db.each do |profession|
+        Profession.where(name: params_professions).find_each do |profession|
           profession.user_professions.create!(user_id: resource.id)
         end
       end
