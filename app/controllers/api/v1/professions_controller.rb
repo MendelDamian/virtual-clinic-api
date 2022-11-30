@@ -11,9 +11,11 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
 
     default_pagination_params = { page: STARTING_PAGE, per_page: PROFESSIONS_PER_PAGE }
     params.reverse_merge!(default_pagination_params)
-    @professions = Profession.where('name LIKE ?', "%#{params[:name]}%")
-                             .offset((params[:page].to_i - 1) * params[:per_page].to_i)
-                             .limit(params[:per_page].to_i)
+
+    @professions = Profession.where(nil)
+    @professions = @professions.filter_by_name(params[:name]) if params[:name].present?
+    @professions.offset((params[:page].to_i - 1) * params[:per_page].to_i)
+    @professions.limit(params[:per_page].to_i)
     render json: @professions, status: :ok
   end
 
