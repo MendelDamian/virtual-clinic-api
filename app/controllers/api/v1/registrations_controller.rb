@@ -19,7 +19,7 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
       if resource.persisted? && resource.account_type_doctor?
         params_professions = params[:user][:professions]
 
-        # If professions are not sent, then do nothing. It's recommended to do not send a param if it's not modified.
+        # If professions are not sent, then do nothing. It's recommended to do not send this param if it's not modified.
         if params_professions.nil?
           return
         end
