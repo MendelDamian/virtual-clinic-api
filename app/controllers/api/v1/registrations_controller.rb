@@ -25,7 +25,7 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
         end
 
         # If so, then delete all professions for this doctor.
-        UserProfession.where(user_id: resource.id).delete_all
+        UserProfession.delete_by(user_id: resource.id)
 
         # And add the new ones.
         entries = []
