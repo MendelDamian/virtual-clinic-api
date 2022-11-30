@@ -4,9 +4,12 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
       if resource.persisted? && resource.account_type_doctor?
         params_professions = params[:user][:professions]
 
+        entries = []
         Profession.where(name: params_professions).find_each do |profession|
-          profession.user_professions.create!(user_id: resource.id)
+          entries << { user_id: resource.id, profession_id: profession.id }
         end
+
+        UserProfession.insert_all(entries)
       end
     end
   end
@@ -25,9 +28,12 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
         UserProfession.where(user_id: resource.id).delete_all
 
         # And add the new ones.
+        entries = []
         Profession.where(name: params_professions).find_each do |profession|
-          profession.user_professions.create!(user_id: resource.id)
+          entries << { user_id: resource.id, profession_id: profession.id }
         end
+
+        UserProfession.insert_all(entries)
       end
     end
   end
