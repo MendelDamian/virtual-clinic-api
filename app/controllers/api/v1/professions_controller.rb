@@ -11,6 +11,17 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
     render json: @professions, status: :ok
   end
 
+  # Display all professions for a doctor.
+  # GET /api/v1/professions/doctor/:doctor_id
+  def doctor
+    doctor = Doctor.where(id: params[:doctor_id]).first
+    if doctor
+      render json: doctor.professions, status: :ok
+    else
+      render json: { error: 'Doctor not found' }, status: :not_found
+    end
+  end
+
   def create
     @profession = Profession.new(profession_params)
     if @profession.save

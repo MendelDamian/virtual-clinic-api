@@ -5,7 +5,9 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      resources :professions, only: %i[index create]
+      resources :professions, only: %i[index create] do
+        get 'doctor/:doctor_id', on: :collection, to: 'professions#doctor'
+      end
     end
   end
 end
