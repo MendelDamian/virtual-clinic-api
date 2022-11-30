@@ -1,5 +1,5 @@
 class Profession < ApplicationRecord
-  has_many :user_professions
+  has_many :user_professions, dependent: :destroy
   has_many :users, through: :user_professions
 
   # Validations
