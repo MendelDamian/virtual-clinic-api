@@ -6,9 +6,9 @@ class Api::V1::ApplicationController < ::ApplicationController
 
   def set_curr_user
     if current_user.account_type_doctor?
-      @curr_user = Doctor.find(current_user.id)
+      @curr_user = current_user.becomes(Doctor)
     else
-      @curr_user = Patient.find(current_user.id)
+      @curr_user = current_user.becomes(Patient)
     end
   end
 end
