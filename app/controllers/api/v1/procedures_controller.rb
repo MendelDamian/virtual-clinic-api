@@ -62,7 +62,6 @@ class Api::V1::ProceduresController < ::ApplicationController
     else
       render json:{ error: 'There is no such procedure for that doctor' }, status: :unprocessable_entity
     end
-
   end
 
   private
