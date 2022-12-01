@@ -1,11 +1,18 @@
-class Api::V1::ProceduresController < ApplicationController
-  before_action :set_api_v1_procedure, only: [:show, :update, :destroy]
+class Api::V1::ProceduresController < ::ApplicationController
+  before_action :set_procedure, only: [:show, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /api/v1/procedures
   def index
-    @procedures = Procedure.all
+    if current_user.account_type_doctor?
+      @procedures = current_user.procedures.all
+      render json: @procedures
+    else
+      render json: { error: 'Log in as doctor to see your procedure list' }, status: :unauthorized
+    end
 
-    render json: @procedures
+
+
   end
 
   # GET /api/v1/procedures/1
@@ -15,37 +22,57 @@ class Api::V1::ProceduresController < ApplicationController
 
   # POST /api/v1/procedures
   def create
-    @procedure = Procedure.new(api_v1_procedure_params)
-
-    if @procedure.save
-      render json: @procedure, status: :created
+    if current_user.account_type_doctor?
+      @procedure = current_user.procedures.new(procedure_params)
+      if @procedure.save
+        render json: @procedure, status: :created
+      else
+        render json: @procedure.errors, status: :unprocessable_entity
+      end
     else
-      render json: @procedure.errors, status: :unprocessable_entity
+      render json: { error: 'Only doctors can create procedures' }, status: :unauthorized
     end
   end
 
-  # PATCH/PUT /api/v1/procedures/1
+  # PATCH/PUT /api/v1/procedures/[ID OF PROCEDURE]
   def update
-    if @procedure.update(api_v1_procedure_params)
-      render json: @procedure
+    if(@procedure.presence)
+      if current_user.account_type_doctor?
+        if @procedure.update(procedure_params)
+          render json: @procedure
+        else
+          render json: @procedure.errors, status: :unprocessable_entity
+        end
+      else
+        render json: { error: 'Only doctors can edit procedures' }, status: :unauthorized
+      end
     else
-      render json: @procedure.errors, status: :unprocessable_entity
+      render json:{ error: 'There is no such procedure for that doctor' }, status: :unprocessable_entity
     end
+
+
   end
 
-  # DELETE /api/v1/procedures/1
+  # DELETE /api/v1/procedures/[ID OF PROCEDURE]
   def destroy
-    @procedure.destroy
+    if(@procedure.presence)
+      if @procedure.destroy
+        head :ok
+      end
+    else
+      render json:{ error: 'There is no such procedure for that doctor' }, status: :unprocessable_entity
+    end
+
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_api_v1_procedure
-      @procedure = Procedure.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_procedure
+    @procedure = current_user.procedures.find_by(id: params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def api_v1_procedure_params
-      params.require(:procedure).permit(:name, :needed_time)
-    end
+  # Only allow a list of trusted parameters through.
+  def procedure_params
+    params.require(:procedure).permit(:name, :needed_time)
+  end
 end

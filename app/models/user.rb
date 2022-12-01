@@ -2,7 +2,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: JwtDenylist
 
-  has_many :procedures
+  has_many :procedures, dependent: :destroy, inverse_of: :user, foreign_key: :users_id
 
   enum account_type: {
     patient: 0,
