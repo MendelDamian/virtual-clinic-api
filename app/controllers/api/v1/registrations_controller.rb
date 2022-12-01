@@ -20,9 +20,7 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
         params_professions = params[:user][:professions]
 
         # If professions are not sent, then do nothing. It's recommended to do not send this param if it's not modified.
-        if params_professions.nil?
-          return
-        end
+        return if params_professions.nil?
 
         # If so, then delete all professions for this doctor.
         UserProfession.delete_by(user_id: resource.id)
