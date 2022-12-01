@@ -10,9 +10,6 @@ class Api::V1::ProceduresController < ::ApplicationController
     else
       render json: { error: 'Log in as doctor to see your procedure list' }, status: :unauthorized
     end
-
-
-
   end
 
   # GET /api/v1/procedures/1
