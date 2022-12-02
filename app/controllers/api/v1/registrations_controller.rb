@@ -1,7 +1,7 @@
 class Api::V1::RegistrationsController < Devise::RegistrationsController
   def create
     super do |resource|
-      return unless resource.persisted? && resource.account_type_doctor?
+      next unless resource.persisted? && resource.account_type_doctor?
 
       params_professions = params[:user][:professions]
       add_professions_to_doctor(resource, params_professions) if params_professions
@@ -10,7 +10,7 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
 
   def update
     super do |resource|
-      return unless resource.persisted? && resource.account_type_doctor?
+      next unless resource.persisted? && resource.account_type_doctor?
 
       # If professions are not sent, then do nothing. It's recommended to do not send this param if it's not modified.
       params_professions = params[:user][:professions]
@@ -32,6 +32,6 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
       entries << { user_id: doctor.id, profession_id: profession.id }
     end
 
-    UserProfession.insert_all(entries)
+    UserProfession.insert_all(entries) if entries.any?
   end
 end
