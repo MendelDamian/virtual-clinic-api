@@ -8,7 +8,7 @@ class Api::V1::ProceduresController < ::ApplicationController
       @procedures = current_user.procedures.all
       render json: @procedures
     else
-      render json: { error: 'Log in as doctor to see your procedure list' }, status: :unauthorized
+      render json: { error: 'Log in as doctor to see your procedures list' }, status: :unauthorized
     end
   end
 
@@ -33,21 +33,18 @@ class Api::V1::ProceduresController < ::ApplicationController
 
   # PATCH/PUT /api/v1/procedures/[ID OF PROCEDURE]
   def update
-    if(@procedure.presence)
-      if current_user.account_type_doctor?
-        if @procedure.update(procedure_params)
-          render json: @procedure
-        else
-          render json: @procedure.errors, status: :unprocessable_entity
-        end
-      else
-        render json: { error: 'Only doctors can edit procedures' }, status: :unauthorized
-      end
+    unless @procedure.presence
+      render json: { error: 'Procedure not found' }, status: :not_found
+    end
+    unless current_user.account_type_doctor?
+      render json: { error: 'Only doctors can edit procedures' }, status: :unauthorized
+    end
+    if @procedure.update(procedure_params)
+      render json: @procedure
     else
-      render json:{ error: 'There is no such procedure for that doctor' }, status: :unprocessable_entity
+      render json: @procedure.errors, status: :unprocessable_entity
     end
   end
-
   # DELETE /api/v1/procedures/[ID OF PROCEDURE]
   def destroy
     if(@procedure.presence)
@@ -55,7 +52,7 @@ class Api::V1::ProceduresController < ::ApplicationController
         head :ok
       end
     else
-      render json:{ error: 'There is no such procedure for that doctor' }, status: :unprocessable_entity
+      render json:{ error: 'There is no such procedure for that doctor' }, status: :not_found
     end
   end
 
