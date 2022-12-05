@@ -13,10 +13,8 @@ module ApiResponse
   end
 
   def json_response
-    default_pagination_params = { page: DEFAULT_PAGE, per_page: DEFAULT_PER_PAGE }
-    params.reverse_merge!(default_pagination_params)
-    @page = params[:page].to_i
-    @per_page = params[:per_page].to_i
+    @page = params[:page].present? ? params[:page].to_i : DEFAULT_PAGE
+    @per_page = params[:per_page].present? ? params[:per_page].to_i : DEFAULT_PER_PAGE
 
     return render json: { error: 'Invalid page number' }, status: :bad_request unless validate_pagination_params?
 
