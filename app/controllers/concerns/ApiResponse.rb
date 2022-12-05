@@ -13,9 +13,7 @@ module ApiResponse
   end
 
   def json_response
-    @page = params[:page].present? ? params[:page].to_i : DEFAULT_PAGE
-    @per_page = params[:per_page].present? ? params[:per_page].to_i : DEFAULT_PER_PAGE
-
+    set_pagination_params
     return render json: { error: 'Invalid page number' }, status: :unprocessable_entity unless pagination_params_valid?
 
     set_collection
@@ -35,5 +33,10 @@ module ApiResponse
 
   def pagination_params_valid?
     @page > 0 && @per_page > 0
+  end
+
+  def set_pagination_params
+    @page = params[:page].present? ? params[:page].to_i : DEFAULT_PAGE
+    @per_page = params[:per_page].present? ? params[:per_page].to_i : DEFAULT_PER_PAGE
   end
 end
