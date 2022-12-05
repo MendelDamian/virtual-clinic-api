@@ -16,7 +16,7 @@ module ApiResponse
     @page = params[:page].present? ? params[:page].to_i : DEFAULT_PAGE
     @per_page = params[:per_page].present? ? params[:per_page].to_i : DEFAULT_PER_PAGE
 
-    return render json: { error: 'Invalid page number' }, status: :bad_request unless validate_pagination_params?
+    return render json: { error: 'Invalid page number' }, status: :bad_request unless pagination_params_valid?
 
     @collection = set_collection
     @collection = @collection.filter(filtering_params)
@@ -34,7 +34,7 @@ module ApiResponse
 
   private
 
-  def validate_pagination_params?
+  def pagination_params_valid?
     @page > 0 && @per_page > 0
   end
 end
