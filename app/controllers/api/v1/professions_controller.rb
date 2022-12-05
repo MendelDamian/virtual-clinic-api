@@ -28,7 +28,7 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
   end
 
   def set_collection
-    Profession
+    @collection = Profession
   end
 
   def filtering_params

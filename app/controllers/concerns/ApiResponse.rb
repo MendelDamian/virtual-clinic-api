@@ -16,13 +16,12 @@ module ApiResponse
     @page = params[:page].present? ? params[:page].to_i : DEFAULT_PAGE
     @per_page = params[:per_page].present? ? params[:per_page].to_i : DEFAULT_PER_PAGE
 
-    return render json: { error: 'Invalid page number' }, status: :bad_request unless pagination_params_valid?
+    return render json: { error: 'Invalid page number' }, status: :unprocessable_entity unless pagination_params_valid?
 
-    @collection = set_collection
-    @collection = @collection.filter(filtering_params)
+    set_collection
+    @collection = @collection.filter filtering_params
     @total = @collection.count
     @collection = @collection.offset((@page - 1) * @per_page).limit(@per_page)
-    @collection = @collection.limit(@per_page)
 
     render json: {
       data: @collection,
