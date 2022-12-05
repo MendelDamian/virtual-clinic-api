@@ -4,7 +4,7 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
       next unless resource.persisted? && resource.account_type_doctor?
 
       params_professions = params[:user][:professions]
-      add_professions_to_doctor(resource, params_professions) if params_professions
+      add_professions_to_doctor(resource, params_professions) if params_professions.present?
     end
   end
 
