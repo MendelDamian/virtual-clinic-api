@@ -15,7 +15,7 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
   def create
     @profession = Profession.new(profession_params)
     if @profession.save
-      render json: @profession, status: :created
+      render json: { data: @profession }, status: :created
     else
       render json: { errors: @profession.errors }, status: :unprocessable_entity
     end
