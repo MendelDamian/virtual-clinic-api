@@ -17,7 +17,7 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
     if @profession.save
       render json: @profession, status: :created
     else
-      render json: @profession.errors, status: :unprocessable_entity
+      render json: { errors: @profession.errors }, status: :unprocessable_entity
     end
   end
 
