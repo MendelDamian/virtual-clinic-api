@@ -19,7 +19,7 @@ module ApiResponse
     set_collection
     @collection = @collection.filter filtering_params
     @total = @collection.count
-    @collection = @collection.offset((@page - 1) * @per_page).limit(@per_page)
+    paginate
 
     render json: {
       data: @collection,
@@ -38,5 +38,9 @@ module ApiResponse
   def set_pagination_params
     @page = params[:page].present? ? params[:page].to_i : DEFAULT_PAGE
     @per_page = params[:per_page].present? ? params[:per_page].to_i : DEFAULT_PER_PAGE
+  end
+
+  def paginate
+    @collection = @collection.offset((@page - 1) * @per_page).limit(@per_page)
   end
 end
