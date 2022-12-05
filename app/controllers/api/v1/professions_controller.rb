@@ -5,13 +5,6 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
     json_response
   end
 
-  # Display all professions for a doctor.
-  # GET /api/v1/professions/doctor/:doctor_id
-  def doctor
-    @doctor = Doctor.find(params[:doctor_id])
-    render json: @doctor.professions, status: :ok
-  end
-
   def create
     @profession = Profession.new(profession_params)
     if @profession.save
