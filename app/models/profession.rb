@@ -1,8 +1,8 @@
 class Profession < ApplicationRecord
   include Filterable
 
-  has_many :user_professions, dependent: :destroy
-  has_many :users, through: :user_professions
+  has_many :user_professions, dependent: :delete_all
+  has_many :doctors, through: :user_professions
 
   # Scopes.
   scope :filter_by_name, -> (name) { where("name LIKE ?", "%#{name}%") if name.present? }
