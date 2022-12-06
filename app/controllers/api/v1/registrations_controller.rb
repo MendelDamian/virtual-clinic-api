@@ -1,25 +1,23 @@
 class Api::V1::RegistrationsController < Devise::RegistrationsController
   def create
-    super do |resource|
-      next unless resource.persisted? && resource.account_type_doctor?
+    # Remove professions from params
+    params_professions = params[:user].delete(:professions)
 
-      params_professions = params[:user][:professions]
-      add_professions_to_doctor(resource, params_professions) if params_professions.present?
+    super do |resource|
+      next unless resource.persisted? && resource.account_type_doctor? && params_professions.present?
+
+      add_professions_to_doctor(resource, params_professions)
     end
   end
 
   def update
+    # Remove professions from params
+    params_professions = params[:user].delete(:professions)
+
     super do |resource|
-      next unless resource.persisted? && resource.account_type_doctor?
+      next unless resource.persisted? && resource.account_type_doctor? && params_professions.present?
 
-      # If professions are not sent, then do nothing. It's recommended to do not send this param if it's not modified.
-      params_professions = params[:user][:professions]
-      return if params_professions.nil?
-
-      # If so, then delete all professions for this doctor.
       UserProfession.delete_by(user_id: resource.id)
-
-      # And add the new ones.
       add_professions_to_doctor(resource, params_professions)
     end
   end
