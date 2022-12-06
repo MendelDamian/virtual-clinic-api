@@ -7,7 +7,7 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
 
   def create
     return head :unauthorized unless @curr_user.account_type_doctor?
-    
+
     @profession = Profession.new(profession_params)
     if @profession.save
       render json: { data: @profession }, status: :created
@@ -23,7 +23,7 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
   end
 
   def set_collection
-    @collection = Profession
+    @collection = Profession.all
   end
 
   def filtering_params
