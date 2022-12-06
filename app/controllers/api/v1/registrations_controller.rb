@@ -24,6 +24,14 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def destroy
+    if current_user.account_type_doctor?
+      current_user.becomes(Doctor).destroy!
+    else
+      current_user.becomes(Patient).destroy!
+    end
+  end
+
   private
 
   def add_professions_to_doctor(doctor, params_professions)
