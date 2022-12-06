@@ -6,10 +6,9 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :professions, only: %i[index create]
+
       resources :doctors, only: %i[] do
-        member do
-          get :professions
-        end
+        resources :professions, only: %i[index], controller: 'doctors/professions'
       end
     end
   end

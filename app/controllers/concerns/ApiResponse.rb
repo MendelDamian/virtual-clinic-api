@@ -17,7 +17,9 @@ module ApiResponse
     return render json: { error: 'Invalid page number' }, status: :unprocessable_entity unless pagination_params_valid?
 
     set_collection
-    @collection = @collection.filter filtering_params
+    # FIXME keeps failing when anything is passed. ArgumentError (wrong number of arguments (given 1, expected 0))
+    #  app/controllers/concerns/ApiResponse.rb:20:in `filter'
+    @collection = @collection.filter filtering_params if filtering_params.present?
     @total = @collection.count
     paginate
 
