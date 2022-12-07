@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_25_141336) do
+ActiveRecord::Schema.define(version: 2022_11_29_124532) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,15 @@ ActiveRecord::Schema.define(version: 2022_11_25_141336) do
     t.string "jti", null: false
     t.datetime "exp", null: false
     t.index ["jti"], name: "index_jwt_denylist_on_jti"
+  end
+
+  create_table "procedures", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "name"
+    t.integer "needed_time_min"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_procedures_on_user_id"
   end
 
   create_table "professions", force: :cascade do |t|
@@ -50,6 +59,7 @@ ActiveRecord::Schema.define(version: 2022_11_25_141336) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "procedures", "users"
   add_foreign_key "user_professions", "professions"
   add_foreign_key "user_professions", "users"
 end
