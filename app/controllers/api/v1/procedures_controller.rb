@@ -29,8 +29,7 @@ class Api::V1::ProceduresController < Api::V1::ApplicationController
   # DELETE /api/v1/procedures/ID OF PROCEDURE
   def destroy
     return head :unauthorized unless @curr_user.account_type_doctor?
-    @procedure = @curr_user.procedures.find(params[:id])
-    @procedure.destroy!
+    @curr_user.procedures.find(params[:id]).destroy!
     head :ok
   end
 
