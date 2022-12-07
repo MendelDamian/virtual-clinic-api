@@ -1,10 +1,12 @@
 class Profession < ApplicationRecord
-  has_many :user_professions, dependent: :destroy
-  has_many :users, through: :user_professions
+  include Filterable
 
-  # Filters
-  scope :filter_by_name, -> (name) { where('name LIKE ?', "%#{name}%") }
+  has_many :user_professions, dependent: :delete_all
+  has_many :doctors, through: :user_professions
 
-  # Validations
+  # Scopes.
+  scope :filter_by_name, -> (name) { where("name LIKE ?", "%#{name}%") if name.present? }
+
+  # Validations.
   validates :name, length: { maximum: 50, minimum: 2 }, uniqueness: true
 end
