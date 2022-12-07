@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :professions, only: %i[index create]
 
-      resources :doctors, only: %i[] do
+      resources :doctors, only: %i[index] do
         resources :professions, only: %i[index], controller: 'doctors/professions'
       end
     end
