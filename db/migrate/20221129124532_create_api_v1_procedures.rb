@@ -3,7 +3,7 @@ class CreateApiV1Procedures < ActiveRecord::Migration[6.1]
     create_table :procedures do |t|
       t.belongs_to :users, foreign_key: true
       t.string :name
-      t.time :needed_time
+      t.integer :needed_time_min
 
       t.timestamps
     end

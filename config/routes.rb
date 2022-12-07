@@ -6,9 +6,10 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
       resources :professions, only: %i[index create]
-
+      resources :procedures, only: %i[index create update destroy]
       resources :doctors, only: %i[] do
         resources :professions, only: %i[index], controller: 'doctors/professions'
+        resources :procedures, only: %i[index], controller: 'doctors/procedures'
       end
     end
   end
