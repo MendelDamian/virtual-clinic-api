@@ -22,12 +22,12 @@ ActiveRecord::Schema.define(version: 2022_11_29_124532) do
   end
 
   create_table "procedures", force: :cascade do |t|
-    t.bigint "users_id"
+    t.bigint "user_id"
     t.string "name"
     t.integer "needed_time_min"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["users_id"], name: "index_procedures_on_users_id"
+    t.index ["user_id"], name: "index_procedures_on_user_id"
   end
 
   create_table "professions", force: :cascade do |t|
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 2022_11_29_124532) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "procedures", "users", column: "users_id"
+  add_foreign_key "procedures", "users"
   add_foreign_key "user_professions", "professions"
   add_foreign_key "user_professions", "users"
 end

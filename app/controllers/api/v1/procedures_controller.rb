@@ -6,7 +6,7 @@ class Api::V1::ProceduresController < Api::V1::ApplicationController
     json_response
   end
   def set_collection
-    @collection = Procedure.all
+    @collection = @curr_user.procedures.all
   end
   def filtering_params
     params.slice(:name)
