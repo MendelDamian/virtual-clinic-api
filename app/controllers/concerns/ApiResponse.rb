@@ -3,7 +3,7 @@ module ApiResponse
 
   DEFAULT_PAGE = 1
   DEFAULT_PER_PAGE = 10
-  PAGINATION_ERROR = { "pagination": ["Invalid pagination params"] }
+  PAGINATION_ERROR = { "pagination": ["has invalid values"] }
 
   def set_collection
     raise NotImplementedError
