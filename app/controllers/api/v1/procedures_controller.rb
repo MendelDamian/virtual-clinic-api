@@ -35,7 +35,7 @@ class Api::V1::ProceduresController < Api::V1::ApplicationController
   end
 
   def set_collection
-    @collection = @curr_user.procedures.all
+    @collection = Procedure.all.order(:name)
   end
   def filtering_params
     params.slice(:name)
