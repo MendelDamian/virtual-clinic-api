@@ -3,7 +3,7 @@ module ApiResponse
 
   DEFAULT_PAGE = 1
   DEFAULT_PER_PAGE = 10
-  PAGINATION_ERROR = { "pagination": "Invalid pagination params" }
+  PAGINATION_ERROR = { "pagination": ["Invalid pagination params"] }
 
   def set_collection
     raise NotImplementedError
@@ -15,7 +15,7 @@ module ApiResponse
 
   def json_response
     set_pagination_params
-    return render json: { errors: [PAGINATION_ERROR] }, status: :unprocessable_entity unless pagination_params_valid?
+    return render json: { errors: PAGINATION_ERROR }, status: :unprocessable_entity unless pagination_params_valid?
 
     set_collection
     @collection = @collection.filter_using filtering_params
