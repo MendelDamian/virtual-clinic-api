@@ -7,7 +7,9 @@ class User < ApplicationRecord
     doctor: 1
   }, _prefix: true
 
-  validates_inclusion_of :account_type, in: account_types.keys, message: 'is not a valid account_type'
+  # Validations
+  validates :first_name, :last_name, length: { maximum: 50, minimum: 2 }
+  validates_inclusion_of :account_type, in: account_types.keys, message: 'is not a valid account type'
 
   def account_type=(value)
     self[:account_type] = value
