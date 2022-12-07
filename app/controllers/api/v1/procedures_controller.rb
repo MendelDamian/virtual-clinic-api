@@ -30,6 +30,7 @@ class Api::V1::ProceduresController < Api::V1::ApplicationController
     @procedure.update!(procedure_params)
     render json: { data: @procedure }, status: :ok
   end
+  
   # DELETE /api/v1/procedures/ID OF PROCEDURE
   def destroy
     return head :unauthorized unless @curr_user.account_type_doctor?
