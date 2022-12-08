@@ -30,19 +30,19 @@ class Api::V1::ProceduresController < Api::V1::ApplicationController
   def destroy
     return head :unauthorized unless @curr_user.account_type_doctor?
     @curr_user.procedures.find(params[:id]).destroy!
-    head :ok
+    head :no_content
   end
 
   def set_collection
     @collection = Procedure.all.order(:name)
   end
+
   def filtering_params
     params.slice(:name)
   end
 
   private
-  # Use callbacks to share common setup or constraints between actions.
-  # Only allow a list of trusted parameters through.
+
   def procedure_params
     params.require(:procedure).permit(:name, :needed_time_min)
   end
