@@ -23,8 +23,8 @@ ActiveRecord::Schema.define(version: 2022_11_29_124532) do
 
   create_table "procedures", force: :cascade do |t|
     t.bigint "user_id"
-    t.string "name"
-    t.integer "needed_time_min"
+    t.string "name", null: false
+    t.integer "needed_time_min", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_procedures_on_user_id"
