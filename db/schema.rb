@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_29_124532) do
+ActiveRecord::Schema.define(version: 2022_12_09_155910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,8 +23,8 @@ ActiveRecord::Schema.define(version: 2022_11_29_124532) do
 
   create_table "procedures", force: :cascade do |t|
     t.bigint "user_id"
-    t.string "name"
-    t.integer "needed_time_min"
+    t.string "name", null: false
+    t.integer "needed_time_min", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_procedures_on_user_id"
@@ -59,7 +59,18 @@ ActiveRecord::Schema.define(version: 2022_11_29_124532) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "work_plan", force: :cascade do |t|
+    t.bigint "user_id"
+    t.integer "day_of_week", default: 0
+    t.integer "work_hour_start", default: 0
+    t.integer "work_hour_end", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_work_plan_on_user_id"
+  end
+
   add_foreign_key "procedures", "users"
   add_foreign_key "user_professions", "professions"
   add_foreign_key "user_professions", "users"
+  add_foreign_key "work_plan", "users"
 end
