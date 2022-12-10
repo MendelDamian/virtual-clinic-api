@@ -59,18 +59,18 @@ ActiveRecord::Schema.define(version: 2022_12_09_155910) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "work_plan", force: :cascade do |t|
+  create_table "work_plans", force: :cascade do |t|
     t.bigint "user_id"
     t.integer "day_of_week", default: 0
     t.integer "work_hour_start", default: 0
     t.integer "work_hour_end", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_work_plan_on_user_id"
+    t.index ["user_id"], name: "index_work_plans_on_user_id"
   end
 
   add_foreign_key "procedures", "users"
   add_foreign_key "user_professions", "professions"
   add_foreign_key "user_professions", "users"
-  add_foreign_key "work_plan", "users"
+  add_foreign_key "work_plans", "users"
 end
