@@ -60,10 +60,10 @@ ActiveRecord::Schema.define(version: 2022_12_09_155910) do
   end
 
   create_table "work_plans", force: :cascade do |t|
-    t.bigint "user_id"
-    t.integer "day_of_week", default: 0
-    t.integer "work_hour_start", default: 0
-    t.integer "work_hour_end", default: 0
+    t.bigint "user_id", null: false
+    t.integer "day_of_week", default: 0, null: false
+    t.integer "work_hour_start", default: 0, null: false
+    t.integer "work_hour_end", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_work_plans_on_user_id"
