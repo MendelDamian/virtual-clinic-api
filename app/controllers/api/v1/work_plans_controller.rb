@@ -47,10 +47,6 @@ class Api::V1::WorkPlansController < Api::V1::ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    # def set_work_plan
-      # @work_plan = WorkPlan.find(params[:id])
-    # end
 
     # Only allow a list of trusted parameters through.
   def work_plan_params
