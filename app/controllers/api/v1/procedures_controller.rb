@@ -30,7 +30,7 @@ class Api::V1::ProceduresController < Api::V1::ApplicationController
   def destroy
     return head :unauthorized unless @curr_user.account_type_doctor?
     @curr_user.procedures.find(params[:id]).destroy!
-    head :ok
+    head :no_content
   end
 
   def set_collection
