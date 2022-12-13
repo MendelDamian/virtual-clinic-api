@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources :doctors, only: %i[index] do
         resources :professions, only: %i[index], controller: 'doctors/professions'
         resources :procedures, only: %i[index], controller: 'doctors/procedures'
+        resources :work_plans, only: %i[index], controller: 'doctors/work_plans'
       end
     end
   end
