@@ -1,5 +1,4 @@
 class WorkPlan < ApplicationRecord
-  include Filterable
   belongs_to :doctor, inverse_of: :work_plans, foreign_key: :user_id
 
   enum day_of_week:{

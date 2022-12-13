@@ -16,7 +16,7 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
   end
 
   private
-  def require_account_type!
+  def require_doctor
     head :unauthorized unless @curr_user.account_type_doctor?
   end
   def profession_params

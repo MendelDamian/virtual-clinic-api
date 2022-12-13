@@ -29,7 +29,7 @@ class Api::V1::WorkPlansController < Api::V1::ApplicationController
   private
 
     # Only allow a list of trusted parameters through.
-  def require_account_type!
+  def require_doctor
     head :unauthorized unless @curr_user.account_type_doctor?
   end
   def work_plan_params
