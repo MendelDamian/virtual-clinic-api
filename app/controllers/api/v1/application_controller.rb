@@ -2,6 +2,12 @@ class Api::V1::ApplicationController < ::ApplicationController
   before_action :authenticate_user!
   before_action :set_curr_user
 
+  protected
+
+  def require_doctor
+    head :unauthorized unless @curr_user.account_type_doctor?
+  end
+
   private
 
   def set_curr_user

@@ -1,6 +1,6 @@
 class Api::V1::ProfessionsController < Api::V1::ApplicationController
-  before_action :require_doctor, only: [:create]
   include ApiResponse
+  before_action :require_doctor, only: %i[create]
 
   def index
     json_response
@@ -16,9 +16,7 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
   end
 
   private
-  def require_doctor
-    head :unauthorized unless @curr_user.account_type_doctor?
-  end
+
   def profession_params
     params.require(:profession).permit(:name)
   end

@@ -10,6 +10,5 @@ class Api::V1::Doctors::WorkPlansController < Api::V1::ApplicationController
   end
 
   def filtering_params
-    params.slice()
   end
 end

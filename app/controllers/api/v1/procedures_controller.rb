@@ -1,6 +1,8 @@
 class Api::V1::ProceduresController < Api::V1::ApplicationController
-  before_action :require_doctor, only: [:create, :update, :destroy]
   include ApiResponse
+  before_action :require_doctor, only: %i[create update destroy]
+  before_action :set_procedure, only: %i[update destroy]
+
   # GET /api/v1/procedures/?name=
   def index
     json_response
@@ -18,30 +20,30 @@ class Api::V1::ProceduresController < Api::V1::ApplicationController
 
   # PATCH/PUT /api/v1/procedures/ID OF PROCEDURE
   def update
-    @procedure = @curr_user.procedures.find(params[:id])
     @procedure.update!(procedure_params)
     render json: { data: @procedure }, status: :ok
   end
 
   # DELETE /api/v1/procedures/ID OF PROCEDURE
   def destroy
-    @curr_user.procedures.find(params[:id]).destroy!
+    @procedure.destroy!
     head :no_content
   end
 
   def set_collection
     @collection = Procedure.all.order(:name)
   end
+
   def filtering_params
     params.slice(:name)
   end
 
   private
-  # Use callbacks to share common setup or constraints between actions.
-  # Only allow a list of trusted parameters through.
-  def require_doctor
-    head :unauthorized unless @curr_user.account_type_doctor?
+
+  def set_procedure
+    @procedure = @curr_user.procedures.find(params[:id])
   end
+
   def procedure_params
     params.require(:procedure).permit(:name, :needed_time_min)
   end
