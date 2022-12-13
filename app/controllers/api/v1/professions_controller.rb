@@ -1,4 +1,5 @@
 class Api::V1::ProfessionsController < Api::V1::ApplicationController
+  before_action :require_doctor, only: [:create]
   include ApiResponse
 
   def index
@@ -6,8 +7,6 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
   end
 
   def create
-    return head :unauthorized unless @curr_user.account_type_doctor?
-
     @profession = Profession.new(profession_params)
     if @profession.save
       render json: { data: @profession }, status: :created
@@ -17,7 +16,9 @@ class Api::V1::ProfessionsController < Api::V1::ApplicationController
   end
 
   private
-
+  def require_account_type!
+    head :unauthorized unless @curr_user.account_type_doctor?
+  end
   def profession_params
     params.require(:profession).permit(:name)
   end
