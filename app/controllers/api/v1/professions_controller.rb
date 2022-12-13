@@ -1,13 +1,12 @@
 class Api::V1::ProfessionsController < Api::V1::ApplicationController
   include ApiResponse
+  before_action :require_doctor, only: %i[create]
 
   def index
     json_response
   end
 
   def create
-    return head :unauthorized unless @curr_user.account_type_doctor?
-
     @profession = Profession.new(profession_params)
     if @profession.save
       render json: { data: @profession }, status: :created
