@@ -12,13 +12,10 @@ class WorkPlan < ApplicationRecord
     saturday: 6
   }, _prefix: true
 
-  # Scopes.
-  scope :filter_by_day_of_week, -> (day) { where("day_of_week LIKE ?", "%#{day}%") if day.present? }
-
   validates_uniqueness_of :day_of_week, scope: :user_id
   validates_inclusion_of :day_of_week, in: day_of_weeks.keys, message: 'is not a valid day of week'
   validates :work_hour_start, :work_hour_end, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 24 }
-  validates :work_hour_start, numericality: { less_than: :work_hour_end }, message: 'must be before work hour end'
+  validates :work_hour_start, numericality: { less_than: :work_hour_end , message: 'must be before work hour end'}
 
   def day_of_week=(value)
     self[:day_of_week] = value
