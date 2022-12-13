@@ -10,10 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_09_155910) do
+ActiveRecord::Schema.define(version: 2022_12_13_210703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "appointments", force: :cascade do |t|
+    t.bigint "doctor_id", null: false
+    t.bigint "patient_id", null: false
+    t.bigint "procedure_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "start_time", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["doctor_id"], name: "index_appointments_on_doctor_id"
+    t.index ["patient_id"], name: "index_appointments_on_patient_id"
+    t.index ["procedure_id"], name: "index_appointments_on_procedure_id"
+  end
 
   create_table "jwt_denylist", force: :cascade do |t|
     t.string "jti", null: false
@@ -69,6 +82,9 @@ ActiveRecord::Schema.define(version: 2022_12_09_155910) do
     t.index ["user_id"], name: "index_work_plans_on_user_id"
   end
 
+  add_foreign_key "appointments", "procedures"
+  add_foreign_key "appointments", "users", column: "doctor_id"
+  add_foreign_key "appointments", "users", column: "patient_id"
   add_foreign_key "procedures", "users"
   add_foreign_key "user_professions", "professions"
   add_foreign_key "user_professions", "users"
