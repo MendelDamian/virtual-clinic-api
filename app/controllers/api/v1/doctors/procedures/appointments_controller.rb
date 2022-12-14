@@ -6,7 +6,19 @@ class Api::V1::Doctors::Procedures::AppointmentsController < Api::V1::Applicatio
 
   # GET /api/v1/doctors/:doctor_id/procedures/:procedure_id/appointments/availability?date=
   def availability
-    render json: { data: [] }, status: :ok
+    # While iterating I will use number of minutes from the beginning of the day.
+
+    # TODO: move this to an external service to do not bloat the controller.
+    time_curr = @work_plan.work_hour_start * 60
+    time_end = @work_plan.work_hour_end * 60
+
+    available_slots = []
+    while time_curr + @procedure.needed_time_min <= time_end
+      available_slots << Time.parse("#{time_curr / 60}:#{time_curr % 60}").strftime("%H:%M")
+      time_curr += Procedure::SHORTEST_PROCEDURE_TIME
+    end
+
+    render json: { data: available_slots }, status: :ok
   end
 
   private
