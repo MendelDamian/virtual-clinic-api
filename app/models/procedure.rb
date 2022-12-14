@@ -2,9 +2,10 @@ class Procedure < ApplicationRecord
   include Filterable
 
   SHORTEST_PROCEDURE_TIME = 20
-  LONGEST_PROCEDURE_TIME = 20
+  LONGEST_PROCEDURE_TIME = 7200
 
   belongs_to :doctor, inverse_of: :procedures, foreign_key: :user_id
+  has_many :appointments, dependent: :destroy, inverse_of: :procedure, foreign_key: :procedure_id
 
   # Scopes.
   scope :filter_by_name, -> (name) { where("name LIKE ?", "%#{name}%") if name.present? }
