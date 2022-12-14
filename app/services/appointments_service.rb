@@ -3,7 +3,7 @@ class AppointmentsService
     doctor = procedure.doctor
     work_plan = doctor.work_plans.find_by(day_of_week: date.wday)
     appointments = doctor.appointments.filter_by_start_time(date)
-    
+
     time_curr = minutes(work_plan.work_hour_start)
     time_end = minutes(work_plan.work_hour_end)
 
@@ -20,7 +20,7 @@ class AppointmentsService
 
       next if skip
 
-      available_slots << Time.parse("#{time_curr / 60}:#{time_curr % 60}").strftime("%H:%M")
+      available_slots << format_time(time_curr)
       time_curr += Procedure::SHORTEST_PROCEDURE_TIME
     end
 
@@ -28,6 +28,10 @@ class AppointmentsService
   end
 
   private
+
+  def self.format_time(time)
+    Time.parse("#{time / 60}:#{time % 60}").strftime("%H:%M")
+  end
 
   def self.between?(time_curr, appointment)
     time_curr > datetime_to_minutes(appointment.start_time) &&
