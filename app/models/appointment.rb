@@ -7,8 +7,9 @@ class Appointment < ApplicationRecord
     confirmed: 1,
     canceled: 2
   }, _prefix: true
-
-  # TODO add validation
+  
+  validates_inclusion_of :status, in: status.keys, message: 'is not a valid status'
+  validates :start_time, presence: true
 
   def status=(value)
     self[:status] = value
