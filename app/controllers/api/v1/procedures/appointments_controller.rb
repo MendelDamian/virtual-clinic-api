@@ -1,10 +1,10 @@
-class Api::V1::Doctors::Procedures::AppointmentsController < Api::V1::ApplicationController
+class Api::V1::Procedures::AppointmentsController < Api::V1::ApplicationController
   before_action :date_param_valid?, only: [:availability]
   before_action :set_vars, only: %i[availability]
 
   INVALID_DATE_ERROR = { "date": ["is invalid"] }
 
-  # GET /api/v1/doctors/:doctor_id/procedures/:procedure_id/appointments/availability?date=
+  # GET /api/v1/procedures/:procedure_id/appointments/availability?date=
   def availability
     # While iterating I will use number of minutes from the beginning of the day.
 
@@ -48,8 +48,8 @@ class Api::V1::Doctors::Procedures::AppointmentsController < Api::V1::Applicatio
   end
 
   def set_vars
-    @doctor = Doctor.find(params[:doctor_id].to_i)
-    @procedure = @doctor.procedures.find(params[:procedure_id].to_i)
+    @procedure = Procedure.find(params[:procedure_id].to_i)
+    @doctor = @procedure.doctor
     @work_plan = @doctor.work_plans.find_by(day_of_week: @date.wday) # FIXME
     @appointments = @doctor.appointments.filter_by_start_time(@date)
   end
