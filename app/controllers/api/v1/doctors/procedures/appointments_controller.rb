@@ -9,11 +9,22 @@ class Api::V1::Doctors::Procedures::AppointmentsController < Api::V1::Applicatio
     # While iterating I will use number of minutes from the beginning of the day.
 
     # TODO: move this to an external service to do not bloat the controller.
-    time_curr = @work_plan.work_hour_start * 60
-    time_end = @work_plan.work_hour_end * 60
+    time_curr = minutes(@work_plan.work_hour_start)
+    time_end = minutes(@work_plan.work_hour_end)
 
     available_slots = []
     while time_curr + @procedure.needed_time_min <= time_end
+      skip = false
+      @appointments.each do |appointment|
+        if between?(time_curr + @procedure.needed_time_min, appointment)
+          skip = true
+          time_curr = datetime_to_minutes(appointment.start_time) + appointment.procedure.needed_time_min
+          break
+        end
+      end
+
+      next if skip
+
       available_slots << Time.parse("#{time_curr / 60}:#{time_curr % 60}").strftime("%H:%M")
       time_curr += Procedure::SHORTEST_PROCEDURE_TIME
     end
@@ -23,14 +34,28 @@ class Api::V1::Doctors::Procedures::AppointmentsController < Api::V1::Applicatio
 
   private
 
+  def between?(time_curr, appointment)
+    time_curr > datetime_to_minutes(appointment.start_time) &&
+      time_curr < datetime_to_minutes(appointment.start_time) + appointment.procedure.needed_time_min
+  end
+
+  def datetime_to_minutes(datetime)
+    datetime.hour * 60 + datetime.min
+  end
+
+  def minutes(hours)
+    hours * 60
+  end
+
   def set_vars
     @doctor = Doctor.find(params[:doctor_id].to_i)
     @procedure = @doctor.procedures.find(params[:procedure_id].to_i)
-    @work_plan = @doctor.work_plans.find_by(day_of_week: params[:date].to_date.wday)
+    @work_plan = @doctor.work_plans.find_by(day_of_week: @date.wday) # FIXME
+    @appointments = @doctor.appointments.filter_by_start_time(@date)
   end
 
   def param_date
-    params[:date].to_date
+    @date = params[:date].to_date
   rescue ArgumentError
     nil
   end
