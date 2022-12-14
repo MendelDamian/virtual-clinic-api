@@ -1,7 +1,7 @@
 class AppointmentsService
   def self.available_slots(procedure, date)
     doctor = procedure.doctor
-    work_plan = doctor.work_plans.find_by(day_of_week: date.wday)
+    work_plan = doctor.work_plans.find_by!(day_of_week: date.wday)
     appointments = doctor.appointments.filter_by_start_time(date)
 
     time_curr = minutes(work_plan.work_hour_start)
