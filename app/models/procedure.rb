@@ -2,7 +2,7 @@ class Procedure < ApplicationRecord
   include Filterable
 
   SHORTEST_PROCEDURE_TIME = 20
-  LONGEST_PROCEDURE_TIME = 7200
+  LONGEST_PROCEDURE_TIME = 360
 
   belongs_to :doctor, inverse_of: :procedures, foreign_key: :user_id
   has_many :appointments, dependent: :destroy, inverse_of: :procedure, foreign_key: :procedure_id

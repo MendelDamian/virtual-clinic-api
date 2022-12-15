@@ -12,11 +12,7 @@ class Appointment < ApplicationRecord
   }, _prefix: 'status'
 
   # Scopes.
-  scope :filter_by_start_time, -> (start_time) {
-    where("start_time BETWEEN ? AND ?",
-          "#{start_time.beginning_of_day}",
-          "#{start_time.end_of_day}"
-    ) if start_time.present? }
+  scope :filter_by_start_time, -> (start_time) { where(start_time: start_time.all_day) if start_time.present? }
 
   # Validations.
   validates_inclusion_of :status, in: statuses.keys, message: 'is not a valid status'
