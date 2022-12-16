@@ -7,13 +7,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :professions, only: %i[index create]
       resources :work_plans, only: %i[create update destroy]
-
-      resources :procedures, only: %i[index create update destroy] do
-        scope module: :procedures do
-          resources :appointments, only: %i[] do
-            get :availability, on: :collection
-          end
-        end
+      resources :procedures, only: %i[index create update destroy]
+      resources :appointments, only: %i[] do
+        get 'availability', on: :collection
       end
 
       resources :doctors, only: %i[index] do
