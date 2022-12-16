@@ -24,6 +24,6 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
   def validate_params
     render json: {
       errors: INVALID_DATE_ERROR
-    }, status: :unprocessable_entity unless param_date.present? && params[:procedure_id].present?
+    }, status: :unprocessable_entity unless param_date.present?
   end
 end
