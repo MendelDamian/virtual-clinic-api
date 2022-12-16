@@ -50,6 +50,6 @@ class AppointmentsManager::AvailableAppointments < ::ApplicationService
   end
 
   def between?(time_curr, appointment)
-    minutes(appointment.start_time) < time_curr < minutes(appointment.start_time) + appointment.duration
+    time_curr.between?(minutes(appointment.start_time) + 1, minutes(appointment.start_time) + appointment.duration - 1)
   end
 end

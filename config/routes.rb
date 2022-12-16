@@ -13,9 +13,10 @@ Rails.application.routes.draw do
       end
 
       resources :doctors, only: %i[index] do
-        scope module: :procedures do
+        scope module: :doctors do
           resources :professions, only: %i[index]
           resources :work_plans, only: %i[index]
+          resources :procedures, only: %i[index]
         end
       end
     end
