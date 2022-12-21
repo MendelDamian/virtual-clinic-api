@@ -18,9 +18,8 @@ class Appointment < ApplicationRecord
   validates_inclusion_of :status, in: statuses.keys, message: 'is not a valid status'
   validates :start_time, presence: true
 
-  def duration
-    procedure.needed_time_min
-  end
+  # Delegates.
+  delegate :needed_time_min, to: :procedure
 
   def status=(value)
     self[:status] = value

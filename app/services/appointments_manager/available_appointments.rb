@@ -27,7 +27,7 @@ class AppointmentsManager::AvailableAppointments < ::ApplicationService
       @appointments.each do |appointment|
         if between?(time_curr + @duration, appointment)
           skip = true
-          time_curr = minutes(appointment.start_time) + appointment.duration
+          time_curr = minutes(appointment.start_time) + appointment.needed_time_min
           break
         end
       end
@@ -50,6 +50,6 @@ class AppointmentsManager::AvailableAppointments < ::ApplicationService
   end
 
   def between?(time_curr, appointment)
-    time_curr.between?(minutes(appointment.start_time) + 1, minutes(appointment.start_time) + appointment.duration - 1)
+    time_curr.between?(minutes(appointment.start_time) + 1, minutes(appointment.start_time) + appointment.needed_time_min - 1)
   end
 end
