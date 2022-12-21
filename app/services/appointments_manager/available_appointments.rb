@@ -1,5 +1,5 @@
 class AppointmentsManager::AvailableAppointments < ::ApplicationService
-  attr_reader :procedure, :date
+  attr_reader :procedure, :date, :doctor
 
   def initialize(procedure, date)
     @procedure = procedure
@@ -7,10 +7,10 @@ class AppointmentsManager::AvailableAppointments < ::ApplicationService
   end
 
   def call
-    @doctor = @procedure.doctor
-    @work_plan = @doctor.work_plans.find_by!(day_of_week: @date.wday)
-    @appointments = @doctor.appointments.filter_by_start_time(@date)
-    @duration = @procedure.needed_time_min
+    doctor = procedure.doctor
+    @work_plan = doctor.work_plans.find_by!(day_of_week: date.wday)
+    @appointments = doctor.appointments.filter_by_start_time(date)
+    @duration = procedure.needed_time_min
 
     get_available_slots
   end
