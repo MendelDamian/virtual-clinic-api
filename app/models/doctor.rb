@@ -9,6 +9,6 @@ class Doctor < User
 
   # Scopes.
   default_scope { where(account_type: :doctor) }
-  scope :filter_by_first_name, -> (first_name) { where("first_name LIKE ?", "%#{first_name}%") if first_name.present? }
-  scope :filter_by_last_name, -> (last_name) { where("last_name LIKE ?", "%#{last_name}%") if last_name.present? }
+  scope :filter_by_first_name, -> (first_name) { where("first_name LIKE ?", "%#{first_name}%") }
+  scope :filter_by_last_name, -> (last_name) { where("last_name LIKE ?", "%#{last_name}%") }
 end
