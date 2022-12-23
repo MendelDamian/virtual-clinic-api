@@ -18,7 +18,7 @@ module ApiResponse
     return render json: { errors: PAGINATION_ERROR }, status: :unprocessable_entity unless pagination_params_valid?
 
     set_collection
-    @collection = @collection.filter_using filtering_params if filtering_params.present?
+    @collection = @collection.filter_using filtering_params
     @total = @collection.count
     paginate
 
