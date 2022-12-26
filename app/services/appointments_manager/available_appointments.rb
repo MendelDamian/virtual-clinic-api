@@ -4,28 +4,21 @@ class AppointmentsManager::AvailableAppointments < ::ApplicationService
   def initialize(procedure, date)
     @procedure = procedure
     @date = date
+    @doctor = procedure.doctor
   end
 
   def call
-    doctor = procedure.doctor
-    @work_plan = doctor.work_plans.find_by!(day_of_week: date.wday)
-    @appointments = doctor.appointments.filter_by_start_time(date)
-    @duration = procedure.needed_time_min
+    work_plan = doctor.work_plans.find_by!(day_of_week: date.wday)
+    appointments = doctor.appointments.filter_by_start_time(date)
 
-    get_available_slots
-  end
-
-  private
-
-  def get_available_slots
-    time_curr = @work_plan.work_hour_start * 60
-    time_end = @work_plan.work_hour_end * 60
+    time_curr = work_plan.work_hour_start * 60
+    time_end = work_plan.work_hour_end * 60
 
     available_slots = []
-    while time_curr + @duration <= time_end
+    while time_curr + procedure.needed_time_min <= time_end
       skip = false
-      @appointments.each do |appointment|
-        if between?(time_curr + @duration, appointment)
+      appointments.each do |appointment|
+        if between?(time_curr + procedure.needed_time_min, appointment)
           skip = true
           time_curr = minutes(appointment.start_time) + appointment.needed_time_min
           break
@@ -40,6 +33,8 @@ class AppointmentsManager::AvailableAppointments < ::ApplicationService
 
     available_slots
   end
+
+  private
 
   def format_time(time)
     Time.parse("#{time / 60}:#{time % 60}").strftime("%H:%M")
