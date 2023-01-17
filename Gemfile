@@ -45,6 +45,7 @@ group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
   # Use dotenv-rails to allow setting up ENV parameters on a localhost
   gem 'dotenv-rails'
+  gem 'rspec-rails'
 end
 
 group :development do
