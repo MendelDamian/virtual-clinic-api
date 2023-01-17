@@ -13,8 +13,11 @@ module ApiResponse
     raise NotImplementedError
   end
 
-  def set_serializer
-    @serializer = nil
+  def serializer
+    collection_class_name = @collection.model_name.name
+    "#{collection_class_name}Serializer".constantize
+  rescue
+    nil
   end
 
   def json_response
@@ -26,7 +29,6 @@ module ApiResponse
     @total = @collection.count
     paginate
 
-    set_serializer
     render json: {
       data: serialize_data,
       total: @total,
@@ -51,6 +53,6 @@ module ApiResponse
   end
 
   def serialize_data
-    ActiveModelSerializers::SerializableResource.new(@collection, each_serializer: @serializer)
+    ActiveModelSerializers::SerializableResource.new(@collection, each_serializer: serializer)
   end
 end
