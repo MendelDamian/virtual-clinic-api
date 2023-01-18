@@ -1,4 +1,8 @@
 FactoryBot.define do
+  factory :profession do
+    name { Faker::Job.title }
+  end
+
   factory :user do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
@@ -13,5 +17,6 @@ FactoryBot.define do
 
   factory :doctor, parent: :user do
     account_type { :doctor }
+    professions { [FactoryBot.create(:profession)] }
   end
 end
