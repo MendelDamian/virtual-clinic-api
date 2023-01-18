@@ -9,16 +9,18 @@ RSpec.describe "Users", type: :request do
         post "/users", params: { user: user_attributes }
       end
 
+      subject(:user) { User.last }
+
       it "returns a 201 status code" do
         expect(response).to have_http_status(201)
       end
 
       it "returns the correct json" do
-        expect(response.body).to eq(User.last.to_json)
+        expect(json).to eq(user.as_json)
       end
 
       it "creates a session with the last created user" do
-        expect(controller.current_user).to eq(User.last)
+        expect(session_user_id).to eq(user.id)
       end
     end
 
@@ -35,11 +37,11 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json["errors"]).to eq({ "email" => ["is invalid"] })
+        expect(json_errors).to eq({ "email" => ["is invalid"] })
       end
 
       it "does not create a session" do
-        expect(controller.current_user).to be_nil
+        expect(session_user_id).to be_nil
       end
     end
 
@@ -55,11 +57,11 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json["errors"]).to eq({ "email" => ["can't be blank"] })
+        expect(json_errors).to eq({ "email" => ["can't be blank"] })
       end
 
       it "does not create a session" do
-        expect(controller.current_user).to be_nil
+        expect(session_user_id).to be_nil
       end
     end
 
@@ -76,11 +78,11 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json["errors"]).to eq({ "email" => ["has already been taken"] })
+        expect(json_errors).to eq({ "email" => ["has already been taken"] })
       end
 
       it "does not create a session" do
-        expect(controller.current_user).to be_nil
+        expect(session_user_id).to be_nil
       end
     end
 
@@ -96,11 +98,11 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json["errors"]).to eq({ "account_type" => ["is not a valid account type"] })
+        expect(json_errors).to eq({ "account_type" => ["is not a valid account type"] })
       end
 
       it "does not create a session" do
-        expect(controller.current_user).to be_nil
+        expect(session_user_id).to be_nil
       end
     end
 
@@ -115,17 +117,18 @@ RSpec.describe "Users", type: :request do
         expect(response).to have_http_status(201)
       end
 
+      subject(:user) { User.last }
+
       it "sets account type to patient" do
-        expect(User.last.account_type).to eq("patient")
+        expect(user.account_type).to eq("patient")
       end
 
       it "returns the correct json" do
-        user = User.last
-        expect(response.body).to eq(user.to_json)
+        expect(json).to eq(user.as_json)
       end
 
       it "creates a session with the last created user" do
-        expect(controller.current_user).to eq(User.last)
+        expect(session_user_id).to eq(user.id)
       end
     end
 
@@ -142,16 +145,18 @@ RSpec.describe "Users", type: :request do
           expect(response).to have_http_status(201)
         end
 
+        subject(:doctor) { Doctor.last }
+
         it "assigns the profession to the doctor" do
-          expect(Doctor.last.professions).to eq([profession])
+          expect(doctor.professions).to eq([profession])
         end
 
         it "returns the correct json" do
-          expect(response.body).to eq(User.last.to_json)
+          expect(json).to eq(doctor.as_json)
         end
 
         it "creates a session with the last created user" do
-          expect(controller.current_user).to eq(User.last)
+          expect(session_user_id).to eq(User.last.id)
         end
       end
 
@@ -167,16 +172,18 @@ RSpec.describe "Users", type: :request do
           expect(response).to have_http_status(201)
         end
 
+        subject(:doctor) { Doctor.last }
+
         it "does not assign profesion to the doctor" do
-          expect(Doctor.last.professions).to be_empty
+          expect(doctor.professions).to be_empty
         end
 
         it "returns the correct json" do
-          expect(response.body).to eq(User.last.to_json)
+          expect(json).to eq(doctor.as_json)
         end
 
         it "creates a session with the last created user" do
-          expect(controller.current_user).to eq(User.last)
+          expect(session_user_id).to eq(User.last.id)
         end
       end
 
@@ -191,16 +198,18 @@ RSpec.describe "Users", type: :request do
           expect(response).to have_http_status(201)
         end
 
+        subject(:doctor) { Doctor.last }
+
         it "does not assign profesion to the doctor" do
-          expect(Doctor.last.professions).to be_empty
+          expect(doctor.professions).to be_empty
         end
 
         it "returns the correct json" do
-          expect(response.body).to eq(User.last.to_json)
+          expect(json).to eq(doctor.as_json)
         end
 
         it "creates a session with the last created user" do
-          expect(controller.current_user).to eq(User.last)
+          expect(session_user_id).to eq(User.last.id)
         end
       end
 
@@ -217,16 +226,18 @@ RSpec.describe "Users", type: :request do
           expect(response).to have_http_status(201)
         end
 
+        subject(:doctor) { Doctor.last }
+
         it "assigns the valid profession to the doctor" do
-          expect(Doctor.last.professions).to eq([profession])
+          expect(doctor.professions).to eq([profession])
         end
 
         it "returns the correct json" do
-          expect(response.body).to eq(User.last.to_json)
+          expect(json).to eq(doctor.as_json)
         end
 
         it "creates a session with the last created user" do
-          expect(controller.current_user).to eq(User.last)
+          expect(session_user_id).to eq(User.last.id)
         end
       end
     end
@@ -244,16 +255,18 @@ RSpec.describe "Users", type: :request do
           expect(response).to have_http_status(201)
         end
 
+        subject(:patient) { Patient.last }
+
         it "does not assign the profession to the patient" do
           expect(profession.doctors).to be_empty
         end
 
         it "returns the correct json" do
-          expect(response.body).to eq(User.last.to_json)
+          expect(json).to eq(patient.as_json)
         end
 
         it "creates a session with the last created user" do
-          expect(controller.current_user).to eq(User.last)
+          expect(session_user_id).to eq(User.last.id)
         end
       end
     end
