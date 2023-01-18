@@ -12,7 +12,7 @@ class User < ApplicationRecord
   validates_inclusion_of :account_type, in: account_types.keys, message: 'is not a valid account type'
 
   def account_type=(value)
-    self[:account_type] = value
+    self[:account_type] = value || :patient
   rescue ArgumentError
     self[:account_type] = nil
   end
