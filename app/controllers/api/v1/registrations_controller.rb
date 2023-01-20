@@ -1,7 +1,7 @@
 class Api::V1::RegistrationsController < Devise::RegistrationsController
   def create
     # Remove professions from params
-    params_professions = params[:user].delete(:professions)
+    params_professions = params[:user]&.delete(:professions)
 
     super do |resource|
       next unless resource.persisted? && resource.account_type_doctor? && params_professions.present?
@@ -12,7 +12,7 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
 
   def update
     # Remove professions from params
-    params_professions = params[:user].delete(:professions)
+    params_professions = params[:user]&.delete(:professions)
 
     super do |resource|
       next unless resource.persisted? && resource.account_type_doctor? && params_professions.present?

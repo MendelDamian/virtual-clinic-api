@@ -57,7 +57,25 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json_errors).to eq({ "email" => ["can't be blank"] })
+        expect(json_errors).to eq(User.create(user_attributes).errors.as_json.deep_stringify_keys)
+      end
+
+      it "does not create a session" do
+        expect(session_user_id).to be_nil
+      end
+    end
+
+    context "with no parameters" do
+      before do
+        post "/users"
+      end
+
+      it "returns a 422 status code" do
+        expect(response).to have_http_status(422)
+      end
+
+      it "returns the correct json" do
+        expect(json_errors).to eq(User.create.errors.as_json.deep_stringify_keys)
       end
 
       it "does not create a session" do
