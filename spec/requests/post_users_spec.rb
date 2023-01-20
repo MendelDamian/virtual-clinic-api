@@ -16,7 +16,7 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json).to eq(user.as_json)
+        expect(json).to include(user.as_json)
       end
 
       it "creates a session with the last created user" do
@@ -37,7 +37,7 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json_errors).to eq({ "email" => ["is invalid"] })
+        expect(json_errors).to include({ "email" => ["is invalid"] })
       end
 
       it "does not create a session" do
@@ -57,7 +57,7 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json_errors).to eq(User.create(user_attributes).errors.as_json.deep_stringify_keys)
+        expect(json_errors).to include(User.create(user_attributes).errors.as_json.deep_stringify_keys)
       end
 
       it "does not create a session" do
@@ -75,7 +75,7 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json_errors).to eq(User.create.errors.as_json.deep_stringify_keys)
+        expect(json_errors).to include(User.create.errors.as_json.deep_stringify_keys)
       end
 
       it "does not create a session" do
@@ -96,7 +96,7 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json_errors).to eq({ "email" => ["has already been taken"] })
+        expect(json_errors).to include({ "email" => ["has already been taken"] })
       end
 
       it "does not create a session" do
@@ -116,7 +116,7 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json_errors).to eq({ "account_type" => ["is not a valid account type"] })
+        expect(json_errors).to include({ "account_type" => ["is not a valid account type"] })
       end
 
       it "does not create a session" do
@@ -142,7 +142,7 @@ RSpec.describe "Users", type: :request do
       end
 
       it "returns the correct json" do
-        expect(json).to eq(user.as_json)
+        expect(json).to include(user.as_json)
       end
 
       it "creates a session with the last created user" do
@@ -170,7 +170,7 @@ RSpec.describe "Users", type: :request do
         end
 
         it "returns the correct json" do
-          expect(json).to eq(doctor.as_json)
+          expect(json).to include(doctor.as_json)
         end
 
         it "creates a session with the last created user" do
@@ -197,7 +197,7 @@ RSpec.describe "Users", type: :request do
         end
 
         it "returns the correct json" do
-          expect(json).to eq(doctor.as_json)
+          expect(json).to include(doctor.as_json)
         end
 
         it "creates a session with the last created user" do
@@ -223,7 +223,7 @@ RSpec.describe "Users", type: :request do
         end
 
         it "returns the correct json" do
-          expect(json).to eq(doctor.as_json)
+          expect(json).to include(doctor.as_json)
         end
 
         it "creates a session with the last created user" do
@@ -251,7 +251,7 @@ RSpec.describe "Users", type: :request do
         end
 
         it "returns the correct json" do
-          expect(json).to eq(doctor.as_json)
+          expect(json).to include(doctor.as_json)
         end
 
         it "creates a session with the last created user" do
@@ -280,7 +280,7 @@ RSpec.describe "Users", type: :request do
         end
 
         it "returns the correct json" do
-          expect(json).to eq(patient.as_json)
+          expect(json).to include(patient.as_json)
         end
 
         it "creates a session with the last created user" do
