@@ -31,7 +31,7 @@ class Api::V1::ProceduresController < Api::V1::ApplicationController
   end
 
   def set_collection
-    @collection = Procedure.all.order(:name)
+    @collection = Procedure.includes(:doctor).order(:name)
   end
 
   def filtering_params

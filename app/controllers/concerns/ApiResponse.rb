@@ -13,17 +13,24 @@ module ApiResponse
     raise NotImplementedError
   end
 
+  def serializer
+    collection_class_name = @collection.model_name.name
+    "#{collection_class_name}Serializer".constantize
+  rescue
+    nil
+  end
+
   def json_response
     set_pagination_params
     return render json: { errors: PAGINATION_ERROR }, status: :unprocessable_entity unless pagination_params_valid?
 
     set_collection
-    @collection = @collection.filter_using filtering_params
+    @collection = @collection.filter_using filtering_params if filtering_params.present?
     @total = @collection.count
     paginate
 
     render json: {
-      data: @collection,
+      data: serialize_data,
       total: @total,
       page: @page,
       per_page: @per_page
@@ -43,5 +50,9 @@ module ApiResponse
 
   def paginate
     @collection = @collection.offset((@page - 1) * @per_page).limit(@per_page)
+  end
+
+  def serialize_data
+    ActiveModelSerializers::SerializableResource.new(@collection, each_serializer: serializer)
   end
 end

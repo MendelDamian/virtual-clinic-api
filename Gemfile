@@ -7,6 +7,8 @@ gem "devise", "~> 4.8"
 
 gem "devise-jwt", "~> 0.10.0"
 
+gem 'active_model_serializers', '~> 0.10.13'
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 6.1.7"
 
