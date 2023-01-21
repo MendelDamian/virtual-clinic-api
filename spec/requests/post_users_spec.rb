@@ -11,17 +11,7 @@ RSpec.describe "Users", type: :request do
 
       subject(:user) { User.last }
 
-      it "returns a 201 status code" do
-        expect(response).to have_http_status(201)
-      end
-
-      it "returns the correct json" do
-        expect(json).to include(user.as_json)
-      end
-
-      it "creates a session with the last created user" do
-        expect(session_user_id).to eq(user.id)
-      end
+      it_behaves_like "valid_response"
     end
 
     context "with invalid parameters" do
@@ -32,17 +22,7 @@ RSpec.describe "Users", type: :request do
         post "/users", params: { user: user_attributes }
       end
 
-      it "returns a 422 status code" do
-        expect(response).to have_http_status(422)
-      end
-
-      it "returns the correct json" do
-        expect(json_errors).to include({ "email" => ["is invalid"] })
-      end
-
-      it "does not create a session" do
-        expect(session_user_id).to be_nil
-      end
+      it_behaves_like "invalid_response", [{ "email" => ["is invalid"] }]
     end
 
     context "with missing parameters" do
@@ -52,17 +32,7 @@ RSpec.describe "Users", type: :request do
         post "/users", params: { user: user_attributes }
       end
 
-      it "returns a 422 status code" do
-        expect(response).to have_http_status(422)
-      end
-
-      it "returns the correct json" do
-        expect(json_errors).to include(User.create(user_attributes).errors.as_json.deep_stringify_keys)
-      end
-
-      it "does not create a session" do
-        expect(session_user_id).to be_nil
-      end
+      it_behaves_like "invalid_response", [{ "email" => ["can't be blank"] }]
     end
 
     context "with no parameters" do
@@ -70,17 +40,14 @@ RSpec.describe "Users", type: :request do
         post "/users"
       end
 
-      it "returns a 422 status code" do
-        expect(response).to have_http_status(422)
-      end
+      expected_errors = [
+        { "email" => ["can't be blank"] },
+        { "password" => ["can't be blank"] },
+        { "first_name" => ["is too short (minimum is 2 characters)"] },
+        { "last_name" => ["is too short (minimum is 2 characters)"] }
+      ]
 
-      it "returns the correct json" do
-        expect(json_errors).to include(User.create.errors.as_json.deep_stringify_keys)
-      end
-
-      it "does not create a session" do
-        expect(session_user_id).to be_nil
-      end
+      it_behaves_like "invalid_response", expected_errors
     end
 
     context "with duplicate email" do
@@ -91,17 +58,7 @@ RSpec.describe "Users", type: :request do
         post "/users", params: { user: user_attributes }
       end
 
-      it "returns a 422 status code" do
-        expect(response).to have_http_status(422)
-      end
-
-      it "returns the correct json" do
-        expect(json_errors).to include({ "email" => ["has already been taken"] })
-      end
-
-      it "does not create a session" do
-        expect(session_user_id).to be_nil
-      end
+      it_behaves_like "invalid_response", [{ "email" => ["has already been taken"] }]
     end
 
     context "with invalid account type" do
@@ -111,17 +68,7 @@ RSpec.describe "Users", type: :request do
         post "/users", params: { user: user_attributes }
       end
 
-      it "returns a 422 status code" do
-        expect(response).to have_http_status(422)
-      end
-
-      it "returns the correct json" do
-        expect(json_errors).to include({ "account_type" => ["is not a valid account type"] })
-      end
-
-      it "does not create a session" do
-        expect(session_user_id).to be_nil
-      end
+      it_behaves_like "invalid_response", [{ "account_type" => ["is not a valid account type"] }]
     end
 
     context "with missing account type" do
@@ -131,22 +78,12 @@ RSpec.describe "Users", type: :request do
         post "/users", params: { user: user_attributes }
       end
 
-      it "returns a 201 status code" do
-        expect(response).to have_http_status(201)
-      end
-
       subject(:user) { User.last }
+
+      it_behaves_like "valid_response"
 
       it "sets account type to patient" do
         expect(user.account_type).to eq("patient")
-      end
-
-      it "returns the correct json" do
-        expect(json).to include(user.as_json)
-      end
-
-      it "creates a session with the last created user" do
-        expect(session_user_id).to eq(user.id)
       end
     end
 
@@ -159,22 +96,12 @@ RSpec.describe "Users", type: :request do
           post "/users", params: { user: user_attributes }
         end
 
-        it "returns a 201 status code" do
-          expect(response).to have_http_status(201)
-        end
+        subject(:user) { Doctor.last }
 
-        subject(:doctor) { Doctor.last }
+        it_behaves_like "valid_response"
 
         it "assigns the profession to the doctor" do
-          expect(doctor.professions).to eq([profession])
-        end
-
-        it "returns the correct json" do
-          expect(json).to include(doctor.as_json)
-        end
-
-        it "creates a session with the last created user" do
-          expect(session_user_id).to eq(User.last.id)
+          expect(user.professions).to eq([profession])
         end
       end
 
@@ -186,22 +113,12 @@ RSpec.describe "Users", type: :request do
           post "/users", params: { user: user_attributes }
         end
 
-        it "returns a 201 status code" do
-          expect(response).to have_http_status(201)
-        end
+        subject(:user) { Doctor.last }
 
-        subject(:doctor) { Doctor.last }
+        it_behaves_like "valid_response"
 
         it "does not assign profesion to the doctor" do
-          expect(doctor.professions).to be_empty
-        end
-
-        it "returns the correct json" do
-          expect(json).to include(doctor.as_json)
-        end
-
-        it "creates a session with the last created user" do
-          expect(session_user_id).to eq(User.last.id)
+          expect(user.professions).to be_empty
         end
       end
 
@@ -212,22 +129,10 @@ RSpec.describe "Users", type: :request do
           post "/users", params: { user: user_attributes }
         end
 
-        it "returns a 201 status code" do
-          expect(response).to have_http_status(201)
-        end
-
-        subject(:doctor) { Doctor.last }
+        subject(:user) { Doctor.last }
 
         it "does not assign profesion to the doctor" do
-          expect(doctor.professions).to be_empty
-        end
-
-        it "returns the correct json" do
-          expect(json).to include(doctor.as_json)
-        end
-
-        it "creates a session with the last created user" do
-          expect(session_user_id).to eq(User.last.id)
+          expect(user.professions).to be_empty
         end
       end
 
@@ -240,22 +145,12 @@ RSpec.describe "Users", type: :request do
           post "/users", params: { user: user_attributes }
         end
 
-        it "returns a 201 status code" do
-          expect(response).to have_http_status(201)
-        end
+        subject(:user) { Doctor.last }
 
-        subject(:doctor) { Doctor.last }
+        it_behaves_like "valid_response"
 
         it "assigns the valid profession to the doctor" do
-          expect(doctor.professions).to eq([profession])
-        end
-
-        it "returns the correct json" do
-          expect(json).to include(doctor.as_json)
-        end
-
-        it "creates a session with the last created user" do
-          expect(session_user_id).to eq(User.last.id)
+          expect(user.professions).to eq([profession])
         end
       end
     end
@@ -269,22 +164,12 @@ RSpec.describe "Users", type: :request do
           post "/users", params: { user: user_attributes }
         end
 
-        it "returns a 201 status code" do
-          expect(response).to have_http_status(201)
-        end
+        subject(:user) { Patient.last }
 
-        subject(:patient) { Patient.last }
+        it_behaves_like "valid_response"
 
         it "does not assign the profession to the patient" do
           expect(profession.doctors).to be_empty
-        end
-
-        it "returns the correct json" do
-          expect(json).to include(patient.as_json)
-        end
-
-        it "creates a session with the last created user" do
-          expect(session_user_id).to eq(User.last.id)
         end
       end
     end
