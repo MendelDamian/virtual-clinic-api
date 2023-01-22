@@ -88,7 +88,7 @@ RSpec.describe "Users", type: :request do
     end
 
     context "as a doctor" do
-      context "with valid profession" do
+      context "with existing profession" do
         let(:profession) { FactoryBot.create(:profession) }
         let(:user_attributes) { FactoryBot.attributes_for(:doctor, professions: [profession.name]) }
 
@@ -105,9 +105,9 @@ RSpec.describe "Users", type: :request do
         end
       end
 
-      context "with invalid profession" do
-        let(:invalid_profession) { "invalid_profession" }
-        let(:user_attributes) { FactoryBot.attributes_for(:doctor, professions: [invalid_profession]) }
+      context "with not existing profession" do
+        let(:not_existing_profession) { "Definitely not existing" }
+        let(:user_attributes) { FactoryBot.attributes_for(:doctor, professions: [not_existing_profession]) }
 
         before do
           post "/users", params: { user: user_attributes }
@@ -168,7 +168,7 @@ RSpec.describe "Users", type: :request do
 
         it_behaves_like "valid_response"
 
-        it "does not assign the profession to the patient" do
+        it "does not assign anyone to profession" do
           expect(profession.doctors).to be_empty
         end
       end
