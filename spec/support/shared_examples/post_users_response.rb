@@ -1,6 +1,6 @@
-RSpec.shared_examples "valid_response" do
+RSpec.shared_examples "valid_user_creation_request" do
   it "returns a 201 status code" do
-    expect(response).to have_http_status(201)
+    expect(response).to have_http_status(:created)
   end
 
   it "returns the correct json" do
@@ -12,9 +12,9 @@ RSpec.shared_examples "valid_response" do
   end
 end
 
-RSpec.shared_examples "invalid_response" do |expected_errors|
+RSpec.shared_examples "invalid_user_creation_request" do |expected_errors|
   it "returns a 422 status code" do
-    expect(response).to have_http_status(422)
+    expect(response).to have_http_status(:unprocessable_entity)
   end
 
   expected_errors.each do |errors|

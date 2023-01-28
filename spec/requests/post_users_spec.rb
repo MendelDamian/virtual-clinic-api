@@ -11,10 +11,10 @@ RSpec.describe "Users", type: :request do
 
       subject(:user) { User.last }
 
-      it_behaves_like "valid_response"
+      it_behaves_like "valid_user_creation_request"
     end
 
-    context "with invalid parameters" do
+    context "with invalid parameter" do
       let(:invalid_email) { "invalid_email" }
       let(:user_attributes) { FactoryBot.attributes_for(:user, email: invalid_email) }
 
@@ -22,17 +22,17 @@ RSpec.describe "Users", type: :request do
         post "/users", params: { user: user_attributes }
       end
 
-      it_behaves_like "invalid_response", [{ "email" => ["is invalid"] }]
+      it_behaves_like "invalid_user_creation_request", [{ "email" => ["is invalid"] }]
     end
 
-    context "with missing parameters" do
+    context "with missing parameter" do
       let(:user_attributes) { FactoryBot.attributes_for(:user, email: nil) }
 
       before do
         post "/users", params: { user: user_attributes }
       end
 
-      it_behaves_like "invalid_response", [{ "email" => ["can't be blank"] }]
+      it_behaves_like "invalid_user_creation_request", [{ "email" => ["can't be blank"] }]
     end
 
     context "with no parameters" do
@@ -47,7 +47,7 @@ RSpec.describe "Users", type: :request do
         { "last_name" => ["is too short (minimum is 2 characters)"] }
       ]
 
-      it_behaves_like "invalid_response", expected_errors
+      it_behaves_like "invalid_user_creation_request", expected_errors
     end
 
     context "with duplicate email" do
@@ -58,7 +58,7 @@ RSpec.describe "Users", type: :request do
         post "/users", params: { user: user_attributes }
       end
 
-      it_behaves_like "invalid_response", [{ "email" => ["has already been taken"] }]
+      it_behaves_like "invalid_user_creation_request", [{ "email" => ["has already been taken"] }]
     end
 
     context "with invalid account type" do
@@ -68,7 +68,7 @@ RSpec.describe "Users", type: :request do
         post "/users", params: { user: user_attributes }
       end
 
-      it_behaves_like "invalid_response", [{ "account_type" => ["is not a valid account type"] }]
+      it_behaves_like "invalid_user_creation_request", [{ "account_type" => ["is not a valid account type"] }]
     end
 
     context "with missing account type" do
@@ -80,9 +80,9 @@ RSpec.describe "Users", type: :request do
 
       subject(:user) { User.last }
 
-      it_behaves_like "valid_response"
+      it_behaves_like "valid_user_creation_request"
 
-      it "sets account type to patient" do
+      it "sets default account type" do
         expect(user.account_type).to eq("patient")
       end
     end
@@ -98,9 +98,26 @@ RSpec.describe "Users", type: :request do
 
         subject(:user) { Doctor.last }
 
-        it_behaves_like "valid_response"
+        it_behaves_like "valid_user_creation_request"
 
         it "assigns the profession to the doctor" do
+          expect(user.professions).to eq([profession])
+        end
+      end
+
+      context "with duplicated professions" do
+        let(:profession) { FactoryBot.create(:profession) }
+        let(:user_attributes) { FactoryBot.attributes_for(:doctor, professions: [profession.name, profession.name]) }
+
+        before do
+          post "/users", params: { user: user_attributes }
+        end
+
+        subject(:user) { Doctor.last }
+
+        it_behaves_like "valid_user_creation_request"
+
+        it "ignores duplications and assigns just one profession" do
           expect(user.professions).to eq([profession])
         end
       end
@@ -115,7 +132,7 @@ RSpec.describe "Users", type: :request do
 
         subject(:user) { Doctor.last }
 
-        it_behaves_like "valid_response"
+        it_behaves_like "valid_user_creation_request"
 
         it "does not assign profesion to the doctor" do
           expect(user.professions).to be_empty
@@ -147,7 +164,7 @@ RSpec.describe "Users", type: :request do
 
         subject(:user) { Doctor.last }
 
-        it_behaves_like "valid_response"
+        it_behaves_like "valid_user_creation_request"
 
         it "assigns the valid profession to the doctor" do
           expect(user.professions).to eq([profession])
@@ -166,7 +183,7 @@ RSpec.describe "Users", type: :request do
 
         subject(:user) { Patient.last }
 
-        it_behaves_like "valid_response"
+        it_behaves_like "valid_user_creation_request"
 
         it "does not assign anyone to profession" do
           expect(profession.doctors).to be_empty

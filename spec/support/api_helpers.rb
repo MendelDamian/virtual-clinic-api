@@ -8,7 +8,7 @@ module ApiHelpers
   end
 
   def session_user_id
-    session["warden.user.user.key"][0][0]
+    controller.current_user.id
   rescue
     nil
   end
