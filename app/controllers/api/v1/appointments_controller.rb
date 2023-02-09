@@ -1,6 +1,7 @@
 class Api::V1::AppointmentsController < Api::V1::ApplicationController
   before_action :validate_params, only: %i[availability]
   before_action :set_procedure, only: %i[availability]
+  before_action :require_patient, only: %i[create]
 
   INVALID_DATE_ERROR = { "date": ["is invalid"] }
   def availability
