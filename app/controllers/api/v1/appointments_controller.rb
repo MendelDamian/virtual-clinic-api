@@ -2,19 +2,31 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
   before_action :validate_params, only: %i[availability]
   before_action :set_procedure, only: %i[availability]
   before_action :require_patient, only: %i[create]
+  before_action :set_create_params, only: %i[create]
+  before_action :validate_start_date, only: %i[create]
 
   INVALID_DATE_ERROR = { "date": ["is invalid"] }
+  APPOINTMENT_NOT_AVAILABLE = { "start_time": ["is not available"] }
+
   def availability
     available_slots = AppointmentsManager::AvailableAppointments.call(@procedure, @date)
     render json: { data: available_slots }, status: :ok
   end
 
   def create
-    @appointment = @curr_user.appointments.new(appointment_book_params)
-    if @appointment.save
-      render json: { data: @appointment }, status: :created
+    available_slots = AppointmentsManager::AvailableAppointments.call(@procedure, @start_time.to_date)
+
+    if available_slots.include? @start_time.strftime("%H:%M")
+
+      @appointment = @curr_user.appointments.new(appointment_book_params.merge!(:doctor => @procedure.doctor))
+
+      if @appointment.save
+        render json: { data: @appointment }, status: :created
+      else
+        render json: { errors: @appointment.errors }, status: :unprocessable_entity
+      end
     else
-      render json: { errors: @appointment.errors }, status: :unprocessable_entity
+      render json: { errors: APPOINTMENT_NOT_AVAILABLE }, status: :unprocessable_entity
     end
   end
 
@@ -30,11 +42,23 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
     @procedure = Procedure.find(params[:procedure_id].to_i)
   end
 
+  def set_create_params
+    @procedure = Procedure.find(params[:appointment][:procedure_id].to_i)
+    @start_time = params[:appointment][:start_time].to_datetime
+  rescue ArgumentError
+    nil
+
+  end
+
   def validate_params
     render json: { errors: INVALID_DATE_ERROR }, status: :unprocessable_entity unless param_date.present?
   end
 
+  def validate_start_date
+    render json: { errors: INVALID_DATE_ERROR }, status: :unprocessable_entity unless @start_time.present?
+  end
+
   def appointment_book_params
-    params.require(:appointment).permit(:doctor_id, :procedure_id, :start_time)
+    params.require(:appointment).permit(:procedure_id, :start_time)
   end
 end
