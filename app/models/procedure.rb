@@ -8,7 +8,7 @@ class Procedure < ApplicationRecord
   has_many :appointments, dependent: :destroy, inverse_of: :procedure, foreign_key: :procedure_id
 
   # Scopes.
-  scope :filter_by_name, -> (name) { where("name LIKE ?", "%#{name}%") }
+  scope :filter_by_name, -> (name) { where("name ILIKE ?", "%#{name}%") }
 
   # Validations.
   validates_uniqueness_of :name, scope: :user_id
