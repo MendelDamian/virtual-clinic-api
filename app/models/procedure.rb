@@ -16,7 +16,6 @@ class Procedure < ApplicationRecord
   validates :needed_time_min, presence: true, numericality: {
     greater_than_or_equal_to: SHORTEST_PROCEDURE_TIME,
     less_than_or_equal_to: LONGEST_PROCEDURE_TIME,
-    message: 'is incorrect'
   }
 end
 
