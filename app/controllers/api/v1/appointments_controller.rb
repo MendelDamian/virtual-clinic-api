@@ -1,5 +1,5 @@
 class Api::V1::AppointmentsController < Api::V1::ApplicationController
-  before_action :validate_params, only: :availability
+  before_action :validate_availability_params, only: :availability
   before_action :set_procedure, only: :availability
   before_action :set_appointment, only: :cancellation
 
@@ -31,7 +31,7 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
     @procedure = Procedure.find(params[:procedure_id].to_i)
   end
 
-  def validate_params
+  def validate_availability_params
     render json: { errors: INVALID_DATE_ERROR }, status: :unprocessable_entity unless param_date.present?
   end
 end
