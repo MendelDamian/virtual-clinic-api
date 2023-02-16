@@ -1,9 +1,9 @@
 class Api::V1::AppointmentsController < Api::V1::ApplicationController
-  before_action :validate_params, only: %i[availability]
+  before_action :validate_availability_params, only: %i[availability]
   before_action :set_procedure, only: %i[availability]
   before_action :require_patient, only: %i[create]
   before_action :set_create_params, only: %i[create]
-  before_action :validate_start_date, only: %i[create]
+  before_action :validate_start_time, only: %i[create]
 
   INVALID_DATE_ERROR = { "date": ["is invalid"] }
   APPOINTMENT_NOT_AVAILABLE = { "start_time": ["is not available"] }
@@ -50,11 +50,11 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
 
   end
 
-  def validate_params
+  def validate_availability_params
     render json: { errors: INVALID_DATE_ERROR }, status: :unprocessable_entity unless param_date.present?
   end
 
-  def validate_start_date
+  def validate_start_time
     render json: { errors: INVALID_DATE_ERROR }, status: :unprocessable_entity unless @start_time.present?
   end
 
