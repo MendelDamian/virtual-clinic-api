@@ -7,7 +7,7 @@ class Api::V1::Doctors::AppointmentsController < Api::V1::ApplicationController
   end
 
   def set_collection
-    @collection = Doctor.find(params[:doctor_id]).appointments
+    @collection = Doctor.find(params[:doctor_id]).appointments.order("status, start_time")
   end
 
   def filtering_params
