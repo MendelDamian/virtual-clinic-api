@@ -11,8 +11,7 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
   end
 
   def cancellation
-    @appointment.status = :canceled
-    @appointment.save!
+    @appointment.status_canceled!
     head :no_content
   end
 
