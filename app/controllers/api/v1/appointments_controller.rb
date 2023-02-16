@@ -44,10 +44,9 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
 
   def set_create_params
     @procedure = Procedure.find(params[:appointment][:procedure_id].to_i)
-    @start_time = params[:appointment][:start_time].to_datetime
+    @start_time = DateTime.parse(params[:appointment][:start_time].to_s).change(sec: 0)
   rescue ArgumentError
     nil
-
   end
 
   def validate_availability_params
