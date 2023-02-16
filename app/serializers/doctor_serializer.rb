@@ -1,0 +1,2 @@
+class DoctorSerializer < UserSerializer
+end

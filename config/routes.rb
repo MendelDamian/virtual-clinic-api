@@ -14,9 +14,16 @@ Rails.application.routes.draw do
 
       resources :doctors, only: :index do
         scope module: :doctors do
+          resources :appointments, only: :index
           resources :professions, only: :index
           resources :work_plans, only: :index
           resources :procedures, only: :index
+        end
+      end
+
+      resources :patients, only: :index do
+        scope module: :patients do
+          resources :appointments, only: :index
         end
       end
     end
