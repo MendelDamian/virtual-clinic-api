@@ -1,6 +1,7 @@
 class Api::V1::AppointmentsController < Api::V1::ApplicationController
-  before_action :validate_params, only: %i[availability]
-  before_action :set_procedure, only: %i[availability]
+  before_action :validate_params, only: :availability
+  before_action :set_procedure, only: :availability
+  before_action :set_appointment, only: :cancellation
 
   INVALID_DATE_ERROR = { "date": ["is invalid"] }
 
@@ -9,12 +10,22 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
     render json: { data: available_slots }, status: :ok
   end
 
+  def cancellation
+    @appointment.status = :canceled
+    @appointment.save!
+    head :no_content
+  end
+
   private
 
   def param_date
     @date = params[:date].to_date
   rescue ArgumentError
     nil
+  end
+
+  def set_appointment
+    @appointment = @curr_user.appointments.find(params[:id].to_i)
   end
 
   def set_procedure
