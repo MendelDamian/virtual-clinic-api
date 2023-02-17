@@ -7,8 +7,7 @@ class Appointment < ApplicationRecord
 
   enum status: {
     pending: 0,
-    confirmed: 1,
-    canceled: 2
+    canceled: 1
   }, _prefix: 'status'
 
   # Scopes.

@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       resources :procedures, only: %i[index create update destroy]
       resources :appointments, only: :index do
         get 'availability', on: :collection
+        get 'cancellation', on: :member
       end
 
       resources :doctors, only: :index do
