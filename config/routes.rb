@@ -8,22 +8,15 @@ Rails.application.routes.draw do
       resources :professions, only: %i[index create]
       resources :work_plans, only: %i[create update destroy]
       resources :procedures, only: %i[index create update destroy]
-      resources :appointments, only: [] do
+      resources :appointments, only: :index do
         get 'availability', on: :collection
       end
 
       resources :doctors, only: :index do
         scope module: :doctors do
-          resources :appointments, only: :index
           resources :professions, only: :index
           resources :work_plans, only: :index
           resources :procedures, only: :index
-        end
-      end
-
-      resources :patients, only: :index do
-        scope module: :patients do
-          resources :appointments, only: :index
         end
       end
     end
