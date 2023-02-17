@@ -8,7 +8,7 @@ Rails.application.routes.draw do
       resources :professions, only: %i[index create]
       resources :work_plans, only: %i[create update destroy]
       resources :procedures, only: %i[index create update destroy]
-      resources :appointments, only: [] do
+      resources :appointments, only: :index do
         get 'availability', on: :collection
         get 'cancellation', on: :member
       end
