@@ -22,6 +22,8 @@ class Api::V1::ProceduresController < Api::V1::ApplicationController
   def update
     @procedure.update!(procedure_params)
     render json: { data: @procedure }, status: :ok
+  rescue ActiveRecord::RecordInvalid
+    render json: { errors: @procedure.errors }, status: :unprocessable_entity
   end
 
   # DELETE /api/v1/procedures/ID OF PROCEDURE

@@ -9,7 +9,7 @@ class AppointmentsManager::AvailableAppointments < ::ApplicationService
 
   def call
     work_plan = doctor.work_plans.find_by!(day_of_week: date.wday)
-    appointments = doctor.appointments.filter_by_start_time(date)
+    appointments = doctor.appointments.filter_by_start_time(date).status_pending
 
     time_curr = work_plan.work_hour_start * 60
     time_end = work_plan.work_hour_end * 60
@@ -45,6 +45,6 @@ class AppointmentsManager::AvailableAppointments < ::ApplicationService
   end
 
   def between?(time_curr, appointment)
-    time_curr.between?(minutes(appointment.start_time) + 1, minutes(appointment.start_time) + appointment.needed_time_min - 1)
+    time_curr.between?(minutes(appointment.start_time), minutes(appointment.start_time) + appointment.needed_time_min)
   end
 end

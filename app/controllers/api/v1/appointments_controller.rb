@@ -1,6 +1,9 @@
 class Api::V1::AppointmentsController < Api::V1::ApplicationController
-  before_action :validate_availability_params, only: %i[availability]
-  before_action :set_procedure, only: %i[availability]
+  include ApiResponse
+
+  before_action :validate_availability_params, only: :availability
+  before_action :set_procedure, only: :availability
+  before_action :set_appointment, only: :cancellation
   before_action :require_patient, only: %i[create]
   before_action :set_create_params, only: %i[create]
   before_action :validate_start_time, only: %i[create]
@@ -8,13 +11,21 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
   INVALID_DATE_ERROR = { "date": ["is invalid"] }
   APPOINTMENT_NOT_AVAILABLE = { "start_time": ["is not available"] }
 
+  def index
+    json_response
+  end
+
   def availability
     available_slots = AppointmentsManager::AvailableAppointments.call(@procedure, @date)
     render json: { data: available_slots }, status: :ok
   end
 
-  def create
+  def cancellation
+    @appointment.status_canceled!
+    head :no_content
+  end
 
+  def create
     available_slots = AppointmentsManager::AvailableAppointments.call(@procedure, @start_time.to_date)
 
     if available_slots.include? @start_time.strftime("%H:%M") and @start_time.to_datetime >= DateTime.now.to_datetime
@@ -39,6 +50,10 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
     nil
   end
 
+  def set_appointment
+    @appointment = @curr_user.appointments.find(params[:id].to_i)
+  end
+
   def set_procedure
     @procedure = Procedure.find(params[:procedure_id].to_i)
   end
@@ -60,5 +75,12 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
 
   def appointment_book_params
     params.require(:appointment).permit(:procedure_id, :start_time)
+  end
+
+  def set_collection
+    @collection = @curr_user.appointments.order("status, start_time")
+  end
+
+  def filtering_params
   end
 end

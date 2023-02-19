@@ -1,0 +1,2 @@
+class PatientSerializer < UserSerializer
+end
