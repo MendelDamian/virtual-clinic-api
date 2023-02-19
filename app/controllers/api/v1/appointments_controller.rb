@@ -26,17 +26,9 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
   end
 
   def create
-    available_slots = AppointmentsManager::AvailableAppointments.call(@procedure, @start_time.to_date)
-
-    if available_slots.include? @start_time.strftime("%H:%M") and @start_time.to_datetime >= DateTime.now.to_datetime
-
-      @appointment = @curr_user.appointments.new(appointment_book_params.merge!(:doctor => @procedure.doctor))
-
-      if @appointment.save
-        render json: { data: @appointment }, status: :created
-      else
-        render json: { errors: @appointment.errors }, status: :unprocessable_entity
-      end
+    result = AppointmentsManager::BookAppointment.call(@procedure, @start_time, @curr_user)
+    if result != AppointmentsManager::BookAppointment::FAILURE
+      render json: { data: result }, status: :created
     else
       render json: { errors: APPOINTMENT_NOT_AVAILABLE }, status: :unprocessable_entity
     end
