@@ -8,6 +8,10 @@ class Api::V1::ApplicationController < ::ApplicationController
     head :unauthorized unless @curr_user.account_type_doctor?
   end
 
+  def require_patient
+    head :unauthorized unless @curr_user.account_type_patient?
+  end
+
   private
 
   def set_curr_user
