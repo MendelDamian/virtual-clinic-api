@@ -8,11 +8,13 @@ class AppointmentsManager::BookAppointment < ::ApplicationService
     @start_time = start_time
     @doctor = procedure.doctor
     @curr_user = curr_user
-    @available_slots = AppointmentsManager::AvailableAppointments.call(@procedure, @start_time.to_date)
   end
 
   def call
-    unless @available_slots.include? @start_time.strftime("%H:%M") and @start_time.to_datetime >= DateTime.now.to_datetime
+
+    available_slots = AppointmentsManager::AvailableAppointments.call(@procedure, @start_time.to_date)
+
+    unless available_slots.include? @start_time.strftime("%H:%M") and @start_time.to_datetime >= DateTime.now.to_datetime
       return FAILURE
     end
 
