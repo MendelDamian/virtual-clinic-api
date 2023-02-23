@@ -13,9 +13,9 @@ class Api::V1::RegistrationsController < Devise::RegistrationsController
   def update
     # Remove professions from params
     params_professions = params[:user].delete(:professions)
-
+    
     super do |resource|
-      next unless resource.persisted? && resource.account_type_doctor? && params_professions.present?
+      next unless resource.persisted? && resource.account_type_doctor? && params_professions
 
       UserProfession.delete_by(user_id: resource.id)
       add_professions_to_doctor(resource, params_professions)
