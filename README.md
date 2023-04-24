@@ -1,25 +1,55 @@
-### Projekt Innowacja 2022/2023 API
+# RESTful Service for Virtual Clinic App
 
-[For beginners](https://htdror.notion.site/HTD-Innowacja-API-3a5831af7f994c84875cacc46066bc00)
+Project of a virtual clinic web application enabling clinics to automate interactions with their patients.</br>
+Created under [HTD Health](https://github.com/HTD-Health)’s guidance❤️.
 
-#### Requirements
+## This is a RESTful service for [Virtual Clinic](https://github.com/AverageDanteEnjoyer/virtual-clinic-web) App.
 
-- `ruby`, installation instruction - [Ruby](https://www.ruby-lang.org/en/documentation/installation/), check the `ruby` version: `ruby -v`, you should have `ruby '3.0.4'`
-- `postgresql` - [Download](https://www.postgresql.org/download/), required version `PG 14.X`
+## Tech Stack
 
-#### You should initialize environment variables
+- Ruby on Rails
+- JWT Authentication
+- PostgreSQL
 
-- create file with name `.env` in main folder `projekt-innowacja-2023-api`
-- add environment variables:
-  - `DB_NAME=<nazwa_bazy>`
-  - `DB_USERNAME=<nazwa_usera>`
-  - `DB_PASSWORD=<password>`
+## Features
 
-#### Update all gems and set up the database
+Authentication:
+- [x] Patient / Doctor registration
+- [x] Login / Logout
+- [x] Account deletion
 
-- write in the console: `bundle install`
-- for setup database: `bundle exec rake db:create && bundle exec rake db:migrate`
+Doctor's professions:
+- [x] List professions
+- [x] List doctor's professions
+- [x] Manage doctor's professions
 
-#### Start the server
+Doctor's procedures:
+- [x] List procedures
+- [x] List doctor's procedures
+- [x] Manage doctor's procedures
 
-- `rails s` or `rails server`
+Doctor's working hours:
+- [x] Manage doctor's working hours
+- [x] List doctor's schedule
+
+Appointments:
+- [x] List doctor's appointments
+- [x] List patient's appointments
+- [x] Book appointment
+- [x] Cancel appointment
+
+## Requirements
+
+- `ruby '3.0.4'`
+- `postgresql 14.X`
+
+To authorize requests, you need to attach a valid JWT token to the `Authorization: Bearer <token>` header of each request.
+
+## To run the project locally
+
+Create file with name `.env` in main folder and add environment variables:
+```
+DB_NAME=<db_name>
+DB_USERNAME=<username>
+DB_PASSWORD=<password>
+```
