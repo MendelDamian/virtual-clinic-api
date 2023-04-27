@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+
+  mount ActionCable.server => '/chat'
+
   devise_for :users, defaults: { format: :json }, controllers: {
     registrations: 'api/v1/registrations',
   }
