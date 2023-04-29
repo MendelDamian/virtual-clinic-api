@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_13_210703) do
+ActiveRecord::Schema.define(version: 2023_04_28_070647) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,10 +28,28 @@ ActiveRecord::Schema.define(version: 2022_12_13_210703) do
     t.index ["procedure_id"], name: "index_appointments_on_procedure_id"
   end
 
+  create_table "chats", force: :cascade do |t|
+    t.string "channel_name", null: false
+    t.bigint "doctor_id", null: false
+    t.bigint "patient_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["doctor_id"], name: "index_chats_on_doctor_id"
+    t.index ["patient_id"], name: "index_chats_on_patient_id"
+  end
+
   create_table "jwt_denylist", force: :cascade do |t|
     t.string "jti", null: false
     t.datetime "exp", null: false
     t.index ["jti"], name: "index_jwt_denylist_on_jti"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.bigint "chat_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
   end
 
   create_table "procedures", force: :cascade do |t|
@@ -85,6 +103,9 @@ ActiveRecord::Schema.define(version: 2022_12_13_210703) do
   add_foreign_key "appointments", "procedures"
   add_foreign_key "appointments", "users", column: "doctor_id"
   add_foreign_key "appointments", "users", column: "patient_id"
+  add_foreign_key "chats", "users", column: "doctor_id"
+  add_foreign_key "chats", "users", column: "patient_id"
+  add_foreign_key "messages", "chats"
   add_foreign_key "procedures", "users"
   add_foreign_key "user_professions", "professions"
   add_foreign_key "user_professions", "users"
