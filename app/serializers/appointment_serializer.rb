@@ -13,30 +13,22 @@ class AppointmentSerializer < ActiveModel::Serializer
 
     curr_date = Time.now.to_date
     appointment_date = object.start_time.to_date
+
     if curr_date > appointment_date
-      return PAST
-    end
-
-    if curr_date < appointment_date
+      PAST
+    elsif curr_date < appointment_date
       return PENDING
-    end
-
-    if curr_date == appointment_date
+    else
       curr_time = Time.now.to_time
       start_time = object.start_time.to_time
-      end_time = object.start_time.to_time + object.needed_time_min
 
       if start_time > curr_time
         return PENDING
-      end
-
-      if curr_time > start_time && curr_time < end_time
-        return PRESENT
-      end
-
-      if curr_time > end_time
+      elsif start_time < curr_time
         return PAST
       end
+
+      PRESENT
     end
   end
 
