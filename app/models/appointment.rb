@@ -7,6 +7,7 @@ class Appointment < ApplicationRecord
 
   # Scopes.
   scope :filter_by_start_time, -> (start_time) { where(start_time: start_time.all_day) }
+  scope :not_canceled, -> { where(is_canceled: false) }
 
   # Validations.
   validates :start_time, presence: true
