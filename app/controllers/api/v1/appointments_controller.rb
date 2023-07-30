@@ -69,6 +69,11 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
     params.require(:appointment).permit(:procedure_id, :start_time)
   end
 
+  def cancellation
+    @appointment.update(is_canceled: true)
+    head :no_content
+  end
+
   def set_collection
     @collection = @curr_user.appointments.order("is_canceled, start_time")
   end
