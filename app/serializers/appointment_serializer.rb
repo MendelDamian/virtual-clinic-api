@@ -1,33 +1,29 @@
 class AppointmentSerializer < ActiveModel::Serializer
   attributes :id, :start_time, :status
 
-  CANCELED = :CANCELED
-  PAST = :PAST
-  PRESENT = :PRESENT
-  PENDING = :PENDING
+  CANCELED = :canceled
+  PAST = :past
+  PRESENT = :present
+  PENDING = :pending
+
+  def initialize(*args)
+    super
+    @curr_date = Time.now.to_date
+    @curr_time = Time.now.to_time
+  end
 
   def status
-    if object.is_canceled
-      return CANCELED
-    end
+    return CANCELED if object.is_canceled?
 
-    curr_date = Time.now.to_date
     appointment_date = object.start_time.to_date
+    start_time = object.start_time.to_time
 
-    if curr_date > appointment_date
+    case
+    when appointment_date < @curr_date
       PAST
-    elsif curr_date < appointment_date
-      return PENDING
+    when appointment_date > @curr_date || start_time > @curr_time
+      PENDING
     else
-      curr_time = Time.now.to_time
-      start_time = object.start_time.to_time
-
-      if start_time > curr_time
-        return PENDING
-      elsif start_time < curr_time
-        return PAST
-      end
-
       PRESENT
     end
   end
