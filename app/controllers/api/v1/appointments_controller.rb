@@ -21,7 +21,7 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
   end
 
   def cancellation
-    @appointment.status_canceled!
+    @appointment.update(is_canceled: true)
     head :no_content
   end
 
@@ -67,11 +67,6 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
 
   def appointment_book_params
     params.require(:appointment).permit(:procedure_id, :start_time)
-  end
-
-  def cancellation
-    @appointment.update(is_canceled: true)
-    head :no_content
   end
 
   def set_collection
