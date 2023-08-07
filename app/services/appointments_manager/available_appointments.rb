@@ -9,7 +9,7 @@ class AppointmentsManager::AvailableAppointments < ::ApplicationService
 
   def call
     work_plan = doctor.work_plans.find_by!(day_of_week: date.wday)
-    appointments = doctor.appointments.filter_by_start_time(date).status_pending
+    appointments = doctor.appointments.filter_by_start_time(date).not_canceled
 
     time_curr = work_plan.work_hour_start * 60
     time_end = work_plan.work_hour_end * 60

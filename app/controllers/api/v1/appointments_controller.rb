@@ -21,7 +21,7 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
   end
 
   def cancellation
-    @appointment.status_canceled!
+    @appointment.update(is_canceled: true)
     head :no_content
   end
 
@@ -70,7 +70,7 @@ class Api::V1::AppointmentsController < Api::V1::ApplicationController
   end
 
   def set_collection
-    @collection = @curr_user.appointments.order("status, start_time")
+    @collection = @curr_user.appointments.order("is_canceled, start_time")
   end
 
   def filtering_params
