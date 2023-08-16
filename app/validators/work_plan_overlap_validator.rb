@@ -3,7 +3,6 @@ class WorkPlanOverlapValidator < ActiveModel::Validator
     return unless record.doctor
 
     work_plans = record.doctor.work_plans
-    return if work_plans.empty?
 
     work_plans.each do |work_plan|
       next if record.id == work_plan.id
