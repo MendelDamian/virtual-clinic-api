@@ -15,6 +15,9 @@ class WorkPlan < ApplicationRecord
   validates :work_hour_start, :work_hour_end, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 24 }
   validates :work_hour_start, numericality: { less_than: :work_hour_end, message: 'must be before work hour end' }
 
+  include ActiveModel::Validations
+  validates_with WorkPlanOverlapValidator
+
   def day_of_week=(value)
     self[:day_of_week] = value
   rescue ArgumentError
