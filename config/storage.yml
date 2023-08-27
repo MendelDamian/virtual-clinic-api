@@ -6,6 +6,13 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
+amazon:
+  service: S3
+  access_key_id: <%= ENV['AKIASYMZ5TBSMIOYTN54'] %>
+  secret_access_key: <%= ENV['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'] %>
+  region: eu-central-1
+  bucket: <%= ENV['virtual-clinic-storage'] %>
+
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
 #   service: S3
