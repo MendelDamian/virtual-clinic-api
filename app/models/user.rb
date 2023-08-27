@@ -2,6 +2,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :validatable,
          :jwt_authenticatable, jwt_revocation_strategy: JwtDenylist
 
+  has_one_attached :profile_picture
+
   enum account_type: {
     patient: 0,
     doctor: 1
